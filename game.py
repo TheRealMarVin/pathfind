@@ -2,7 +2,7 @@ import pygame
 import numpy as np
 import random
 
-
+from agents.a_star_agent import AStarAgent
 from constants import CELL_SIZE, COLOR_ROBOT, COLOR_GOAL, GRID_WIDTH, GRID_HEIGHT, NUM_STATIC_AREAS, NUM_DYNAMIC_AREAS, \
     UPDATE_INTERVAL
 from helpers import random_shape
@@ -11,16 +11,17 @@ from obstacle import ObstacleArea
 
 
 class Game:
-    def __init__(self, experiment):
+    def __init__(self):
         self.map = Map(GRID_WIDTH, GRID_HEIGHT)
         self.static_areas = []   # list of static obstacle areas
         self.dynamic_areas = []  # list of dynamic (moving) obstacle areas
-        self.experiment = experiment  # Experiment instance for algorithm testing
         self.create_areas()
 
         # Set up robot and goal positions on free cells.
-        self.robot_pos = self.pick_random_free_cell()
-        self.goal_pos = self.pick_random_free_cell(exclude=self.robot_pos)
+        self.start_pos = self.pick_random_free_cell()
+        self.agent_pos = self.start_pos
+        self.goal_pos = self.pick_random_free_cell(exclude=self.agent_pos)
+        self.agent = AStarAgent(self.start_pos, self.goal_pos)
 
         self.last_update = pygame.time.get_ticks()
 
@@ -139,7 +140,7 @@ class Game:
             self.last_update = now
 
         self.map.update(self.static_areas + self.dynamic_areas)
-        self.experiment.update()
+        self.agent.update(self.map)
 
     def draw(self, surface):
         """
@@ -147,8 +148,8 @@ class Game:
         """
         self.map.draw(surface)
         # Draw robot.
-        if self.robot_pos is not None:
-            rx, ry = self.robot_pos
+        if self.agent_pos is not None:
+            rx, ry = self.agent_pos
             rect = pygame.Rect(rx * CELL_SIZE, ry * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             pygame.draw.rect(surface, COLOR_ROBOT, rect)
         # Draw goal.
@@ -156,3 +157,5 @@ class Game:
             gx, gy = self.goal_pos
             rect = pygame.Rect(gx * CELL_SIZE, gy * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             pygame.draw.rect(surface, COLOR_GOAL, rect)
+
+        self.agent.draw(surface)
