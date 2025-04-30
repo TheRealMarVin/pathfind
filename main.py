@@ -1,25 +1,12 @@
 import pygame
 import numpy as np
 import random
-from scipy.ndimage import binary_dilation
 
-# ================= Constants =================
-GRID_WIDTH = 50             # number of cells horizontally
-GRID_HEIGHT = 40            # number of cells vertically
-CELL_SIZE = 5              # pixel size of each cell
-FPS = 30                    # frames per second for the game loop
+from constants import GRID_WIDTH, GRID_HEIGHT, NUM_STATIC_AREAS, NUM_DYNAMIC_AREAS, UPDATE_INTERVAL, CELL_SIZE, \
+    COLOR_ROBOT, COLOR_GOAL, COLOR_BG, FPS
+from map import Map
+from obstacle import ObstacleArea
 
-NUM_STATIC_AREAS = 3        # number of static (non-moving) obstacle groups
-NUM_DYNAMIC_AREAS = 4       # number of moving obstacle groups
-UPDATE_INTERVAL = 500       # ms between dynamic obstacle moves
-
-# Colors (RGB)
-COLOR_BG = (255, 255, 255)       # white background
-COLOR_OBSTACLE = (0, 0, 0)       # black obstacles
-COLOR_GRID_LINE = (200, 200, 200)
-COLOR_ROBOT = (0, 255, 0)        # green for robot
-COLOR_GOAL = (255, 0, 0)         # red for goal
-COLOR_EROSION = (255, 165, 0)    # orange for erosion boundary
 
 # ================= Helper Shape Functions =================
 def make_horizontal_line(length):
@@ -54,76 +41,6 @@ def random_shape(is_dynamic=False):
         # A simple L-shape: three cells
         return [(0, 0), (1, 0), (0, 1)]
 
-# ================= ObstacleArea Class =================
-class ObstacleArea:
-    def __init__(self, cells, move_pattern=(0, 0), name=None):
-        """
-        cells: list of (x, y) positions defining the shape (relative to a local origin).
-        move_pattern: (dx, dy) movement to apply each update.
-        name: optional identifier.
-        """
-        self.cells = cells
-        self.move_pattern = move_pattern
-        self.name = name or f"Area_{id(self)}"
-        self.offset = (0, 0)  # current position offset on the grid
-
-    def get_absolute_positions(self, offset=None):
-        """Return the positions of the shape cells on the grid based on offset.
-           If offset is None, use the current offset.
-        """
-        if offset is None:
-            offset = self.offset
-        ox, oy = offset
-        return [(x + ox, y + oy) for (x, y) in self.cells]
-
-# ================= Map Class =================
-class Map:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-        self.grid = np.zeros((height, width), dtype=int)
-
-    def update(self, obstacle_areas):
-        """
-        Clears the grid, adds border walls, then overlays obstacles from each area.
-        """
-        self.grid[:, :] = 0
-        # Add border walls.
-        self.grid[0, :] = 1
-        self.grid[-1, :] = 1
-        self.grid[:, 0] = 1
-        self.grid[:, -1] = 1
-
-        for area in obstacle_areas:
-            for x, y in area.get_absolute_positions():
-                if 0 <= x < self.width and 0 <= y < self.height:
-                    self.grid[y, x] = 1
-
-    def draw(self, surface):
-        """
-        Draws the grid with obstacles and an erosion (inflated boundary) overlay.
-        """
-        # Draw the basic grid and obstacles.
-        for y in range(self.height):
-            for x in range(self.width):
-                rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-                if self.grid[y, x] == 1:
-                    pygame.draw.rect(surface, COLOR_OBSTACLE, rect)
-                pygame.draw.rect(surface, COLOR_GRID_LINE, rect, 1)
-
-        # Compute erosion (inflated boundaries) using morphological dilation.
-        obs_bool = (self.grid == 1)
-        # Structure for 8-connected dilation.
-        structure = np.ones((3, 3), dtype=bool)
-        dilated = binary_dilation(obs_bool, structure=structure)
-        erosion_boundary = dilated & ~obs_bool
-
-        # Draw the erosion boundaries.
-        for y in range(self.height):
-            for x in range(self.width):
-                if erosion_boundary[y, x]:
-                    rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
-                    pygame.draw.rect(surface, COLOR_EROSION, rect, 1)
 
 # ================= Experiment Base Class =================
 class Experiment:
