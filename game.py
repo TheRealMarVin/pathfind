@@ -138,24 +138,24 @@ class Game:
                         area.offset = reflected
 
             self.last_update = now
+            self.agent.update(self.map)
 
         self.map.update(self.static_areas + self.dynamic_areas)
-        self.agent.update(self.map)
 
     def draw(self, surface):
         """
         Draw the map, robot, and goal.
         """
+        self.agent.draw(surface)
         self.map.draw(surface)
         # Draw robot.
         if self.agent_pos is not None:
             rx, ry = self.agent_pos
             rect = pygame.Rect(rx * CELL_SIZE, ry * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             pygame.draw.rect(surface, COLOR_ROBOT, rect)
+
         # Draw goal.
         if self.goal_pos is not None:
             gx, gy = self.goal_pos
             rect = pygame.Rect(gx * CELL_SIZE, gy * CELL_SIZE, CELL_SIZE, CELL_SIZE)
             pygame.draw.rect(surface, COLOR_GOAL, rect)
-
-        self.agent.draw(surface)
