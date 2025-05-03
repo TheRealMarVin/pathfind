@@ -1,17 +1,9 @@
 import pygame
-import numpy as np
-import random
 
-from agents.a_star_agent import AStarAgent
-from agents.agent import Agent
-from constants import GRID_WIDTH, GRID_HEIGHT, NUM_STATIC_AREAS, NUM_DYNAMIC_AREAS, UPDATE_INTERVAL, CELL_SIZE, \
-    COLOR_ROBOT, COLOR_GOAL, COLOR_BG, FPS
+from constants import GRID_WIDTH, GRID_HEIGHT, CELL_SIZE, COLOR_BG, FPS
 from game import Game
-from map import Map
-from obstacle import ObstacleArea
 
 
-# ================= Main Function =================
 def main():
     pygame.init()
     screen = pygame.display.set_mode((GRID_WIDTH * CELL_SIZE, GRID_HEIGHT * CELL_SIZE))
