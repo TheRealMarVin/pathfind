@@ -62,6 +62,6 @@ class Map:
                 if self.grid[y, x] == 1:
                     pygame.draw.rect(surface, COLOR_OBSTACLE, rect)
                 elif self.erosion[y, x]:
-                    pygame.draw.rect(surface, COLOR_EROSION, rect, 1)
+                    pygame.draw.rect(surface, COLOR_EROSION, rect)
 
                 pygame.draw.rect(surface, COLOR_GRID_LINE, rect, 1)
