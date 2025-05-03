@@ -1,4 +1,5 @@
 import heapq
+import numpy as np
 
 from agents.agent import Agent
 
@@ -10,13 +11,12 @@ class AStarAgent(Agent):
         self.lookahead_steps = lookahead_steps
 
     def heuristic(self, a, b):
-        dx, dy = abs(a[0] - b[0]), abs(a[1] - b[1])
-        return max(dx, dy)  # Chebyshev distance for 8 directions
+        distance = np.linalg.norm(np.array(a) - np.array(b))
+        return distance
 
     def get_neighbors(self, pos, grid):
         x, y = pos
-        directions = [(-1, 0), (1, 0), (0, -1), (0, 1),
-                      (-1, -1), (-1, 1), (1, -1), (1, 1)]
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
         for dx, dy in directions:
             nx, ny = x + dx, y + dy
             if 0 <= nx < grid.shape[1] and 0 <= ny < grid.shape[0]:
