@@ -14,18 +14,17 @@ class AStarAgent(Agent):
         distance = np.linalg.norm(np.array(a) - np.array(b))
         return distance
 
-    def get_neighbors(self, pos, grid):
+    def get_neighbors(self, pos, game_map):
         x, y = pos
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
         for dx, dy in directions:
             nx, ny = x + dx, y + dy
-            if 0 <= nx < grid.shape[1] and 0 <= ny < grid.shape[0]:
-                if grid[ny, nx] == 0:
+            if 0 <= nx < game_map.grid.shape[1] and 0 <= ny < game_map.grid.shape[0]:
+                if game_map.grid[ny, nx] == 0 and not game_map.erosion[ny, nx]:
                     yield (nx, ny)
 
     def _plan_path(self, game_map):
         start, goal = self.start, self.goal
-        grid = game_map.grid
         heap = [(0 + self.heuristic(start, goal), 0, start, [])]
         visited = set()
 
@@ -40,7 +39,7 @@ class AStarAgent(Agent):
                 self.plan = path + [goal]
                 return
 
-            for neighbor in self.get_neighbors(current, grid):
+            for neighbor in self.get_neighbors(current, game_map):
                 if neighbor not in visited:
                     heapq.heappush(heap, (
                         g + 1 + self.heuristic(neighbor, goal),
