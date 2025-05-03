@@ -3,8 +3,8 @@ import numpy as np
 import random
 
 from agents.a_star_agent import AStarAgent
-from constants import CELL_SIZE, COLOR_ROBOT, COLOR_GOAL, GRID_WIDTH, GRID_HEIGHT, NUM_STATIC_AREAS, NUM_DYNAMIC_AREAS, \
-    UPDATE_INTERVAL
+from constants import CELL_SIZE, COLOR_START, COLOR_GOAL, GRID_WIDTH, GRID_HEIGHT, NUM_STATIC_AREAS, NUM_DYNAMIC_AREAS, \
+    UPDATE_INTERVAL, COLOR_ROBOT
 from helpers import random_shape
 from map import Map
 from obstacle import ObstacleArea
