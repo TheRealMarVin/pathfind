@@ -18,9 +18,9 @@ class Game:
         self.create_areas()
 
         # Set up robot and goal positions on free cells.
-        self.start_pos = self.pick_random_free_cell()
+        self.start_pos = self.map.find_free_position(2)
         self.agent_pos = self.start_pos
-        self.goal_pos = self.pick_random_free_cell(exclude=self.agent_pos)
+        self.goal_pos = self.map.find_free_position(2, ignore_positions=[self.start_pos])
         self.agent = AStarAgent(self.start_pos, self.goal_pos)
 
         self.last_update = pygame.time.get_ticks()
@@ -53,21 +53,6 @@ class Game:
             area = ObstacleArea(shape, move_pattern=move_pattern, name=f"Dynamic_{i}")
             area.offset = (offset_x, offset_y)
             self.dynamic_areas.append(area)
-
-    def pick_random_free_cell(self, exclude=None):
-        """
-        Updates the map and picks a random free cell (optionally excluding a cell).
-        """
-        all_areas = self.static_areas + self.dynamic_areas
-        self.map.update(all_areas)
-        free_cells = np.argwhere(self.map.grid == 0)
-        if len(free_cells) == 0:
-            return None
-        idx = np.random.choice(len(free_cells))
-        pos = tuple(free_cells[idx][::-1])  # return as (x, y)
-        if exclude is not None and pos == exclude:
-            return self.pick_random_free_cell(exclude=exclude)
-        return pos
 
     def check_collision(self, area, proposed_offset):
         """

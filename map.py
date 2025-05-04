@@ -65,3 +65,46 @@ class Map:
                     pygame.draw.rect(surface, COLOR_EROSION, rect)
 
                 pygame.draw.rect(surface, COLOR_GRID_LINE, rect, 1)
+
+    def find_free_position(self, min_distance=1, max_attempts=1000, ignore_positions=None):
+        """
+        Finds a position at least `min_distance` away from any obstacle or ignored position.
+        Uses Chebyshev distance (diagonal = straight).
+        Raises RuntimeError if no valid position can be found.
+        """
+        ignore_positions = ignore_positions or []
+
+        # Base obstacle mask from the map
+        obs_mask = (self.grid == 1).copy()
+
+        # Temporarily mark ignored positions as obstacles
+        for x, y in ignore_positions:
+            if 0 <= x < self.width and 0 <= y < self.height:
+                obs_mask[y, x] = 1
+
+        # Inflate by distance
+        structure = np.ones((2 * min_distance + 1, 2 * min_distance + 1), dtype=bool)
+        inflated = binary_dilation(obs_mask, structure=structure)
+
+        # Safe = outside of inflated zones and not actual obstacle or erosion
+        safe_mask = ~inflated
+
+        candidates = np.argwhere(safe_mask)
+        if candidates.size == 0:
+            raise RuntimeError("Map is too dense: no safe position available at that distance.")
+
+        # Try random candidates first
+        for _ in range(max_attempts):
+            y, x = candidates[np.random.randint(len(candidates))]
+            if not self.grid[y, x] and not self.erosion[y, x] and (x, y) not in ignore_positions:
+                return (x, y)
+
+        # Brute-force fallback
+        for y in range(self.height):
+            for x in range(self.width):
+                if safe_mask[y, x] and not self.grid[y, x] and not self.erosion[y, x] and (
+                x, y) not in ignore_positions:
+                    return (x, y)
+
+        raise RuntimeError("Failed to find a valid position: map may be too dense.")
+
