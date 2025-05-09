@@ -20,6 +20,11 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_x:
+                    game.reset_same_map()
+                elif event.key == pygame.K_n:
+                    game.reset_new_map()
 
         game.update()
         screen.fill(COLOR_BG)

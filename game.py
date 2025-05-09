@@ -12,23 +12,45 @@ from obstacle import ObstacleArea
 
 
 class Game:
-    def __init__(self):
+    def __init__(self, seed=None, agent_type='dstar'):
+        self.agent_type = agent_type  # 'astar' or 'dstar'
+        self.seed = seed or random.randint(0, 2 ** 32 - 1)
+        random.seed(self.seed)
+        np.random.seed(self.seed)
+        self._initialize_game()
+
+    def _initialize_game(self):
         self.map = Map(GRID_WIDTH, GRID_HEIGHT)
-        self.static_areas = []   # list of static obstacle areas
-        self.dynamic_areas = []  # list of dynamic (moving) obstacle areas
-        self.create_areas()
+        self.static_areas = []
+        self.dynamic_areas = []
+        self._create_areas()
         self.map.update(self.static_areas + self.dynamic_areas)
 
-        # Set up robot and goal positions on free cells.
         self.start_pos = self.map.find_free_position(2)
         self.agent_pos = self.start_pos
         self.goal_pos = self.map.find_free_position(2, ignore_positions=[self.start_pos])
-        self.agent = DStarLiteAgent(self.start_pos, self.goal_pos)
-        # self.agent = AStarAgent(self.start_pos, self.goal_pos)
+
+        if self.agent_type == 'dstar':
+            self.agent = DStarLiteAgent(self.start_pos, self.goal_pos)
+        else:
+            self.agent = AStarAgent(self.start_pos, self.goal_pos)
 
         self.last_update = pygame.time.get_ticks()
 
-    def create_areas(self):
+    def reset_same_map(self):
+        # Re-initialize using the same seed
+        random.seed(self.seed)
+        np.random.seed(self.seed)
+        self._initialize_game()
+
+    def reset_new_map(self):
+        # Re-initialize with a new seed
+        self.seed = random.randint(0, 999999)
+        random.seed(self.seed)
+        np.random.seed(self.seed)
+        self._initialize_game()
+
+    def _create_areas(self):
         """
         Create the specified number of static and dynamic obstacle areas with random shapes.
         """
@@ -57,7 +79,7 @@ class Game:
             area.offset = (offset_x, offset_y)
             self.dynamic_areas.append(area)
 
-    def check_collision(self, area, proposed_offset):
+    def _check_collision(self, area, proposed_offset):
         """
         Check if area, when placed at proposed_offset, collides with:
           - Border walls.
@@ -88,7 +110,7 @@ class Game:
 
     def _collides(self, area, off):
         """True if `area` would collide when placed at offset `off`."""
-        return self.check_collision(area, off)
+        return self._check_collision(area, off)
 
     def update(self):
         now = pygame.time.get_ticks()
