@@ -16,6 +16,7 @@ class Game:
         self.static_areas = []   # list of static obstacle areas
         self.dynamic_areas = []  # list of dynamic (moving) obstacle areas
         self.create_areas()
+        self.map.update(self.static_areas + self.dynamic_areas)
 
         # Set up robot and goal positions on free cells.
         self.start_pos = self.map.find_free_position(2)
