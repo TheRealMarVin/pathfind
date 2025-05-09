@@ -3,6 +3,7 @@ import numpy as np
 import random
 
 from agents.a_star_agent import AStarAgent
+from agents.d_star_lite_agent import DStarLiteAgent
 from constants import CELL_SIZE, COLOR_START, COLOR_GOAL, GRID_WIDTH, GRID_HEIGHT, NUM_STATIC_AREAS, NUM_DYNAMIC_AREAS, \
     UPDATE_INTERVAL, COLOR_ROBOT
 from helpers import random_shape
@@ -22,7 +23,8 @@ class Game:
         self.start_pos = self.map.find_free_position(2)
         self.agent_pos = self.start_pos
         self.goal_pos = self.map.find_free_position(2, ignore_positions=[self.start_pos])
-        self.agent = AStarAgent(self.start_pos, self.goal_pos)
+        self.agent = DStarLiteAgent(self.start_pos, self.goal_pos)
+        # self.agent = AStarAgent(self.start_pos, self.goal_pos)
 
         self.last_update = pygame.time.get_ticks()
 
