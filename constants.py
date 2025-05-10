@@ -1,10 +1,7 @@
-GRID_WIDTH = 50             # number of cells horizontally
-GRID_HEIGHT = 40            # number of cells vertically
-CELL_SIZE = 5              # pixel size of each cell
 FPS = 30                    # frames per second for the game loop
 
-NUM_STATIC_AREAS = 13        # number of static (non-moving) obstacle groups
-NUM_DYNAMIC_AREAS = 4       # number of moving obstacle groups
+NUM_STATIC_AREAS = 20        # number of static (non-moving) obstacle groups
+NUM_DYNAMIC_AREAS = 0       # number of moving obstacle groups
 UPDATE_INTERVAL = 500       # ms between dynamic obstacle moves
 
 # Colors (RGB)

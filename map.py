@@ -2,11 +2,12 @@ import pygame
 import numpy as np
 from scipy.ndimage import binary_dilation
 
-from constants import CELL_SIZE, COLOR_OBSTACLE, COLOR_GRID_LINE, COLOR_EROSION
+from constants import COLOR_OBSTACLE, COLOR_GRID_LINE, COLOR_EROSION
 
 
 class Map:
-    def __init__(self, width, height):
+    def __init__(self, width, height, cell_size):
+        self.cell_size = cell_size
         self.width = width
         self.height = height
         self.grid = np.zeros((height, width), dtype=int)
@@ -57,7 +58,7 @@ class Map:
         """
         for y in range(self.height):
             for x in range(self.width):
-                rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+                rect = pygame.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
 
                 if self.grid[y, x] == 1:
                     pygame.draw.rect(surface, COLOR_OBSTACLE, rect)

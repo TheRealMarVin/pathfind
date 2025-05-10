@@ -1,10 +1,11 @@
+import config
 import pygame
 
-from constants import CELL_SIZE
 
 
 class Agent:
     def __init__(self, start, goal):
+        self.cell_size = config.CONFIG["map"]["cell_size"]
         self.start = start
         self.goal = goal
         self.position = start
@@ -22,9 +23,9 @@ class Agent:
     def draw(self, surface):
         """Visualize explored and visited positions."""
         for (x, y) in self.explored:
-            rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+            rect = pygame.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
             pygame.draw.rect(surface, (173, 216, 230), rect)  # light blue = explored
 
         for (x, y) in self.visited:
-            rect = pygame.Rect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+            rect = pygame.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
             pygame.draw.rect(surface, (144, 238, 144), rect)  # light green = visited

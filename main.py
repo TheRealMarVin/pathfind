@@ -2,13 +2,14 @@ import argparse
 import pygame
 import random
 
-from constants import GRID_WIDTH, GRID_HEIGHT, CELL_SIZE, COLOR_BG, FPS
+from config import load_config
+from constants import COLOR_BG, FPS
 from game import Game
 
 
-def main():
+def main(config):
     pygame.init()
-    screen = pygame.display.set_mode((GRID_WIDTH * CELL_SIZE, GRID_HEIGHT * CELL_SIZE))
+    screen = pygame.display.set_mode((config["map"]["grid_width"] * config["map"]["cell_size"], config["map"]["grid_height"] * config["map"]["cell_size"]))
     pygame.display.set_caption("Map Generator & Path Planning Experiment")
     clock = pygame.time.Clock()
 
@@ -36,7 +37,8 @@ def main():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Configuration to launch the small game and configure the bot.")
     parser.add_argument("--seed", type=int, help="Seed for the random number generator")
-    parser.add_argument("--config", type=str, default=None, help="Config file to determine the experimentation to run")
+    parser.add_argument("--config", type=str, default="configs/simple_config.yaml", help="Config file to determine the experimentation to run")
+    parser.add_argument("--schema", type=str, default="configs/schemas/project_schema.yaml", help="Schema file to validate the config")
 
     args = parser.parse_args()
 
@@ -46,6 +48,6 @@ if __name__ == "__main__":
         seed_value = random.randint(0, 2 ** 32 - 1)
 
     random.seed(seed_value)
-    print("seed_value", seed_value)
+    config = load_config(args.config, args.schema)
 
-    main()
+    main(config)
