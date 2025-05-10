@@ -1,0 +1,7 @@
+subsections:
+  game:
+    $ref: ./game.yaml
+    required: false
+  map:
+    $ref: ./map.yaml
+    required: false

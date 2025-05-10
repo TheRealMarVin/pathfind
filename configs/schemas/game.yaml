@@ -1,0 +1,12 @@
+description: Describe how the game should work
+fields:
+  update_interval:
+    description: ms between dynamic obstacle moves or movement
+    required: false
+    default: 30
+    type: int
+  fps:
+    description: Desired frames per second for the game loop
+    required: false
+    default: 30
+    type: int
