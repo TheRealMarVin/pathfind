@@ -5,8 +5,7 @@ import random
 
 from agents.a_star_agent import AStarAgent
 from agents.d_star_lite_agent import DStarLiteAgent
-from constants import COLOR_START, COLOR_GOAL, NUM_STATIC_AREAS, NUM_DYNAMIC_AREAS, \
-    UPDATE_INTERVAL, COLOR_ROBOT
+from constants import COLOR_GOAL, NUM_STATIC_AREAS, NUM_DYNAMIC_AREAS, UPDATE_INTERVAL, COLOR_AGENT
 from helpers import random_shape
 from map import Map
 from obstacle import ObstacleArea
@@ -167,7 +166,7 @@ class Game:
         if self.agent_pos is not None:
             rx, ry = self.agent_pos
             rect = pygame.Rect(rx * self.cell_size, ry * self.cell_size, self.cell_size, self.cell_size)
-            pygame.draw.rect(surface, COLOR_ROBOT, rect)
+            pygame.draw.rect(surface, COLOR_AGENT, rect)
 
         # Draw goal.
         if self.goal_pos is not None:

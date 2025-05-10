@@ -3,7 +3,7 @@ import pygame
 import random
 
 from config import load_config
-from constants import COLOR_BG, FPS
+from constants import COLOR_BG
 from game import Game
 
 
@@ -31,7 +31,7 @@ def main(config):
         screen.fill(COLOR_BG)
         game.draw(screen)
         pygame.display.flip()
-        clock.tick(FPS)
+        clock.tick(config["game"]["fps"])
     pygame.quit()
 
 if __name__ == "__main__":
