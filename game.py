@@ -27,6 +27,7 @@ class Game:
         self.agent_type = agent_type  # 'astar' or 'dstar'
         self.on_completion = CompletionAction.RESET_MAP
         self._initialize_game()
+        self.number_of_iterations = 20
 
     def _update_objects(self):
         for area in self.dynamic_areas:
@@ -192,3 +193,5 @@ class Game:
             self.reset_same_map()
         elif self.on_completion == CompletionAction.NEXT_MAP:
             self.reset_new_map()
+
+        self.number_of_iterations -= 1
