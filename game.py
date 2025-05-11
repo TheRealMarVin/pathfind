@@ -10,54 +10,66 @@ from environment.map import Map
 from environment.obstacle import ObstacleArea
 from helpers.helpers import random_shape
 
+from enum import Enum
+
+class CompletionAction(Enum):
+    NOTHING = 1,
+    NEXT_MAP = 2
+    RESET_MAP = 3
+
 
 class Game:
     def __init__(self, seed=None, agent_type='dstar'):
-        self.agent_type = agent_type  # 'astar' or 'dstar'
         self.seed = seed or random.randint(0, 2 ** 32 - 1)
         random.seed(self.seed)
         np.random.seed(self.seed)
+
+        self.agent_type = agent_type  # 'astar' or 'dstar'
+        self.on_completion = CompletionAction.RESET_MAP
         self._initialize_game()
+
+    def _update_objects(self):
+        for area in self.dynamic_areas:
+            ox, oy = area.offset
+            dx0, dy0 = area.move_pattern
+            target = (ox + dx0, oy + dy0)
+
+            # ---------- 1. try full diagonal step ----------
+            if not self._collides(area, target):
+                area.offset = target
+                continue
+
+            # ---------- 2. probe each axis separately ----------
+            collide_x = self._collides(area, (ox + dx0, oy))
+            collide_y = self._collides(area, (ox, oy + dy0))
+
+            # ---------- 3. decide what to do ----------
+            if not collide_x and not collide_y:
+                new_off = (ox + dx0, oy)
+                if self._collides(area, new_off):
+                    new_off = (ox, oy + dy0)
+                area.offset = new_off
+                # keep the same velocity (still diagonal)
+            else:
+                # at least one axis blocked ► bounce
+                dx = -dx0 if collide_x else dx0
+                dy = -dy0 if collide_y else dy0
+                area.move_pattern = (dx, dy)
+
+                reflected = (ox + dx, oy + dy)
+                if not self._collides(area, reflected):
+                    area.offset = reflected
 
     def update(self):
         now = pygame.time.get_ticks()
         if now - self.last_update >= UPDATE_INTERVAL:
-
-            for area in self.dynamic_areas:
-                ox, oy = area.offset
-                dx0, dy0 = area.move_pattern
-                target = (ox + dx0, oy + dy0)
-
-                # ---------- 1. try full diagonal step ----------
-                if not self._collides(area, target):
-                    area.offset = target
-                    continue
-
-                # ---------- 2. probe each axis separately ----------
-                collide_x = self._collides(area, (ox + dx0, oy))
-                collide_y = self._collides(area, (ox,       oy + dy0))
-
-                # ---------- 3. decide what to do ----------
-                if not collide_x and not collide_y:
-                    new_off = (ox + dx0, oy)
-                    if self._collides(area, new_off):
-                        new_off = (ox, oy + dy0)
-                    area.offset = new_off
-                    # keep the same velocity (still diagonal)
-                else:
-                    # at least one axis blocked ► bounce
-                    dx = -dx0 if collide_x else dx0
-                    dy = -dy0 if collide_y else dy0
-                    area.move_pattern = (dx, dy)
-
-                    reflected = (ox + dx, oy + dy)
-                    if not self._collides(area, reflected):
-                        area.offset = reflected
-
             self.last_update = now
             self.agent.update(self.map)
 
         self.map.update(self.static_areas + self.dynamic_areas)
+
+        if self.agent.has_reached_goal():
+            self._on_goal_reached()
 
     def draw(self, surface):
         """
@@ -103,6 +115,8 @@ class Game:
         # Re-initialize using the same seed
         random.seed(self.seed)
         np.random.seed(self.seed)
+
+        self._initialize_game()
 
     def reset_new_map(self):
         # Re-initialize with a new seed
@@ -172,3 +186,9 @@ class Game:
     def _collides(self, area, off):
         """True if `area` would collide when placed at offset `off`."""
         return self._check_collision(area, off)
+
+    def _on_goal_reached(self):
+        if self.on_completion == CompletionAction.RESET_MAP:
+            self.reset_same_map()
+        elif self.on_completion == CompletionAction.NEXT_MAP:
+            self.reset_new_map()

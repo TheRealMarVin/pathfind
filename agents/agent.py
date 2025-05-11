@@ -20,6 +20,12 @@ class Agent:
         """
         raise NotImplementedError()
 
+    def has_reached_goal(self):
+        if self.position == self.goal:
+            return True
+
+        return False
+
     def draw(self, surface):
         """Visualize explored and visited positions."""
         for (x, y) in self.explored:
