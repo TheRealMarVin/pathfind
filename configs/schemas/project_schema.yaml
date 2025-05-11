@@ -1,7 +1,12 @@
-subsections:
-  game:
-    $ref: ./game.yaml
-    required: false
-  map:
-    $ref: ./map.yaml
-    required: false
+agent_type:
+  description: type of agent to use to explore pathfinding
+  required: false
+  default: astar
+  type: str
+
+game:
+  $ref: ./game.yaml
+  required: false
+map:
+  $ref: ./map.yaml
+  required: false

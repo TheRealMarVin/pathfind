@@ -1,17 +1,17 @@
 description: Describe scene use by the game
-fields:
-  grid_width:
-    description: number of cells horizontally
-    required: false
-    default: 50
-    type: int
-  grid_height:
-    description: number of cells vertically
-    required: false
-    default: 40
-    type: int
-  cell_size:
-    description: pixel size of each cell
-    required: false
-    default: 10
-    type: int
+
+grid_width:
+  description: number of cells horizontally
+  required: false
+  default: 50
+  type: int
+grid_height:
+  description: number of cells vertically
+  required: false
+  default: 40
+  type: int
+cell_size:
+  description: pixel size of each cell
+  required: false
+  default: 10
+  type: int
