@@ -6,9 +6,9 @@ import random
 from agents.a_star_agent import AStarAgent
 from agents.d_star_lite_agent import DStarLiteAgent
 from constants import COLOR_GOAL, NUM_STATIC_AREAS, NUM_DYNAMIC_AREAS, UPDATE_INTERVAL, COLOR_AGENT
-from helpers import random_shape
 from environment.map import Map
 from environment.obstacle import ObstacleArea
+from helpers.helpers import random_shape
 
 
 class Game:
@@ -18,6 +18,64 @@ class Game:
         random.seed(self.seed)
         np.random.seed(self.seed)
         self._initialize_game()
+
+    def update(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_update >= UPDATE_INTERVAL:
+
+            for area in self.dynamic_areas:
+                ox, oy = area.offset
+                dx0, dy0 = area.move_pattern
+                target = (ox + dx0, oy + dy0)
+
+                # ---------- 1. try full diagonal step ----------
+                if not self._collides(area, target):
+                    area.offset = target
+                    continue
+
+                # ---------- 2. probe each axis separately ----------
+                collide_x = self._collides(area, (ox + dx0, oy))
+                collide_y = self._collides(area, (ox,       oy + dy0))
+
+                # ---------- 3. decide what to do ----------
+                if not collide_x and not collide_y:
+                    new_off = (ox + dx0, oy)
+                    if self._collides(area, new_off):
+                        new_off = (ox, oy + dy0)
+                    area.offset = new_off
+                    # keep the same velocity (still diagonal)
+                else:
+                    # at least one axis blocked ► bounce
+                    dx = -dx0 if collide_x else dx0
+                    dy = -dy0 if collide_y else dy0
+                    area.move_pattern = (dx, dy)
+
+                    reflected = (ox + dx, oy + dy)
+                    if not self._collides(area, reflected):
+                        area.offset = reflected
+
+            self.last_update = now
+            self.agent.update(self.map)
+
+        self.map.update(self.static_areas + self.dynamic_areas)
+
+    def draw(self, surface):
+        """
+        Draw the map, robot, and goal.
+        """
+        self.agent.draw(surface)
+        self.map.draw(surface)
+        # Draw robot.
+        if self.agent_pos is not None:
+            rx, ry = self.agent_pos
+            rect = pygame.Rect(rx * self.cell_size, ry * self.cell_size, self.cell_size, self.cell_size)
+            pygame.draw.rect(surface, COLOR_AGENT, rect)
+
+        # Draw goal.
+        if self.goal_pos is not None:
+            gx, gy = self.goal_pos
+            rect = pygame.Rect(gx * self.cell_size, gy * self.cell_size, self.cell_size, self.cell_size)
+            pygame.draw.rect(surface, COLOR_GOAL, rect)
 
     def _initialize_game(self):
         self.width = config.CONFIG["map"]["grid_width"]
@@ -45,7 +103,6 @@ class Game:
         # Re-initialize using the same seed
         random.seed(self.seed)
         np.random.seed(self.seed)
-        self._initialize_game()
 
     def reset_new_map(self):
         # Re-initialize with a new seed
@@ -115,61 +172,3 @@ class Game:
     def _collides(self, area, off):
         """True if `area` would collide when placed at offset `off`."""
         return self._check_collision(area, off)
-
-    def update(self):
-        now = pygame.time.get_ticks()
-        if now - self.last_update >= UPDATE_INTERVAL:
-
-            for area in self.dynamic_areas:
-                ox, oy = area.offset
-                dx0, dy0 = area.move_pattern
-                target = (ox + dx0, oy + dy0)
-
-                # ---------- 1. try full diagonal step ----------
-                if not self._collides(area, target):
-                    area.offset = target
-                    continue
-
-                # ---------- 2. probe each axis separately ----------
-                collide_x = self._collides(area, (ox + dx0, oy))
-                collide_y = self._collides(area, (ox,       oy + dy0))
-
-                # ---------- 3. decide what to do ----------
-                if not collide_x and not collide_y:
-                    new_off = (ox + dx0, oy)
-                    if self._collides(area, new_off):
-                        new_off = (ox, oy + dy0)
-                    area.offset = new_off
-                    # keep the same velocity (still diagonal)
-                else:
-                    # at least one axis blocked ► bounce
-                    dx = -dx0 if collide_x else dx0
-                    dy = -dy0 if collide_y else dy0
-                    area.move_pattern = (dx, dy)
-
-                    reflected = (ox + dx, oy + dy)
-                    if not self._collides(area, reflected):
-                        area.offset = reflected
-
-            self.last_update = now
-            self.agent.update(self.map)
-
-        self.map.update(self.static_areas + self.dynamic_areas)
-
-    def draw(self, surface):
-        """
-        Draw the map, robot, and goal.
-        """
-        self.agent.draw(surface)
-        self.map.draw(surface)
-        # Draw robot.
-        if self.agent_pos is not None:
-            rx, ry = self.agent_pos
-            rect = pygame.Rect(rx * self.cell_size, ry * self.cell_size, self.cell_size, self.cell_size)
-            pygame.draw.rect(surface, COLOR_AGENT, rect)
-
-        # Draw goal.
-        if self.goal_pos is not None:
-            gx, gy = self.goal_pos
-            rect = pygame.Rect(gx * self.cell_size, gy * self.cell_size, self.cell_size, self.cell_size)
-            pygame.draw.rect(surface, COLOR_GOAL, rect)
