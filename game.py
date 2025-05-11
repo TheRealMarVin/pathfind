@@ -7,8 +7,8 @@ from agents.a_star_agent import AStarAgent
 from agents.d_star_lite_agent import DStarLiteAgent
 from constants import COLOR_GOAL, NUM_STATIC_AREAS, NUM_DYNAMIC_AREAS, UPDATE_INTERVAL, COLOR_AGENT
 from helpers import random_shape
-from map import Map
-from obstacle import ObstacleArea
+from environment.map import Map
+from environment.obstacle import ObstacleArea
 
 
 class Game:
