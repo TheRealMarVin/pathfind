@@ -29,38 +29,6 @@ class Game:
         self._initialize_game()
         self.number_of_iterations = 20
 
-    def _update_objects(self):
-        for area in self.dynamic_areas:
-            ox, oy = area.offset
-            dx0, dy0 = area.move_pattern
-            target = (ox + dx0, oy + dy0)
-
-            # ---------- 1. try full diagonal step ----------
-            if not self._collides(area, target):
-                area.offset = target
-                continue
-
-            # ---------- 2. probe each axis separately ----------
-            collide_x = self._collides(area, (ox + dx0, oy))
-            collide_y = self._collides(area, (ox, oy + dy0))
-
-            # ---------- 3. decide what to do ----------
-            if not collide_x and not collide_y:
-                new_off = (ox + dx0, oy)
-                if self._collides(area, new_off):
-                    new_off = (ox, oy + dy0)
-                area.offset = new_off
-                # keep the same velocity (still diagonal)
-            else:
-                # at least one axis blocked ► bounce
-                dx = -dx0 if collide_x else dx0
-                dy = -dy0 if collide_y else dy0
-                area.move_pattern = (dx, dy)
-
-                reflected = (ox + dx, oy + dy)
-                if not self._collides(area, reflected):
-                    area.offset = reflected
-
     def update(self):
         now = pygame.time.get_ticks()
         if now - self.last_update >= UPDATE_INTERVAL:
@@ -111,6 +79,38 @@ class Game:
             self.agent = AStarAgent(self.start_pos, self.goal_pos)
 
         self.last_update = pygame.time.get_ticks()
+
+    def _update_objects(self):
+        for area in self.dynamic_areas:
+            ox, oy = area.offset
+            dx0, dy0 = area.move_pattern
+            target = (ox + dx0, oy + dy0)
+
+            # ---------- 1. try full diagonal step ----------
+            if not self._collides(area, target):
+                area.offset = target
+                continue
+
+            # ---------- 2. probe each axis separately ----------
+            collide_x = self._collides(area, (ox + dx0, oy))
+            collide_y = self._collides(area, (ox, oy + dy0))
+
+            # ---------- 3. decide what to do ----------
+            if not collide_x and not collide_y:
+                new_off = (ox + dx0, oy)
+                if self._collides(area, new_off):
+                    new_off = (ox, oy + dy0)
+                area.offset = new_off
+                # keep the same velocity (still diagonal)
+            else:
+                # at least one axis blocked ► bounce
+                dx = -dx0 if collide_x else dx0
+                dy = -dy0 if collide_y else dy0
+                area.move_pattern = (dx, dy)
+
+                reflected = (ox + dx, oy + dy)
+                if not self._collides(area, reflected):
+                    area.offset = reflected
 
     def reset_same_map(self):
         # Re-initialize using the same seed
