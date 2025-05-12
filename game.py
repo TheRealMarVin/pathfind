@@ -135,10 +135,10 @@ class Game:
         move_opts = [(-1, 0), (1, 0), (0, -1), (0, 1),
                      (-1, -1), (-1, 1), (1, -1), (1, 1)]
         for i in range(NUM_DYNAMIC_AREAS):
-            shape = random_shape(is_dynamic=True, rng=rng)
-            off_x = rng.randint(1, width - max(x for x, _ in shape) - 2)
-            off_y = rng.randint(1, height - max(y for _, y in shape) - 2)
-            move_pattern = rng.choice(move_opts)
+            shape = random_shape(is_dynamic=True, rng=self.map_random_generator)
+            off_x = self.map_random_generator.randint(1, width - max(x for x, _ in shape) - 2)
+            off_y = self.map_random_generator.randint(1, height - max(y for _, y in shape) - 2)
+            move_pattern = self.map_random_generator.choice(move_opts)
             area = ObstacleArea(shape, move_pattern=move_pattern, name=f"Dynamic_{i}")
             area.offset = (off_x, off_y)
             dynamic.append(area)
