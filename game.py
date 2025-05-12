@@ -92,6 +92,10 @@ class Game:
 
         self.last_update = pygame.time.get_ticks()
 
+        # Display information in console
+        print(f"Agent: {agent_type}, Map #{self.cur_map_idx+1}, Spawn #{self.cur_spawn_idx+1}")
+        print(f"  Start: {self.start_pos} -> Goal: {self.goal_pos}\n")
+
     def _on_goal_reached(self):
         self.cur_spawn_idx += 1
         if self.cur_spawn_idx < self.spawns_per_map:
