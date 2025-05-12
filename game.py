@@ -123,6 +123,14 @@ class Game:
         else:
             pygame.event.post(pygame.event.Event(pygame.QUIT))
 
+        if self.cur_agent_idx < len(self.agent_types):
+            self.map_seed = random.randrange(2**32)
+            self.map_random_generator = random.Random(self.map_seed)
+            self._generate_new_map()
+            self._spawn_agent()
+        else:
+            pygame.event.post(pygame.event.Event(pygame.QUIT))
+
     def _create_areas(self):
         static, dynamic = [], []
         width = self.width
