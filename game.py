@@ -209,7 +209,8 @@ class Game:
                 if pos in other_positions:
                     return True
 
-        if self.agent_pos in proposed_positions:
+        current_positions = set(area.get_absolute_positions())
+        if self.agent_pos in proposed_positions and self.agent_pos not in current_positions:
             return True
 
         return False
