@@ -7,6 +7,7 @@ class ObstacleArea:
         """
         self.cells = cells
         self.move_pattern = move_pattern
+        self.original_move_pattern = move_pattern
         self.name = name or f"Area_{id(self)}"
         self.offset = (0, 0)  # current position offset on the grid
 

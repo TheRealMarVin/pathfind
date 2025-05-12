@@ -79,6 +79,7 @@ class Game:
 
         for area in self.dynamic_areas + self.static_areas:
             area.offset = area.init_offset
+            area.move_pattern = area.original_move_pattern
 
         self.map.update(self.static_areas + self.dynamic_areas)
 
@@ -155,6 +156,7 @@ class Game:
             move_pattern = self.map_random_generator.choice(move_opts)
             area = ObstacleArea(shape, move_pattern=move_pattern, name=f"Dynamic_{i}")
             area.offset = (off_x, off_y)
+            area.original_move_pattern = area.move_pattern
             dynamic.append(area)
 
         return static, dynamic
@@ -187,6 +189,7 @@ class Game:
 
     def _check_collision(self, area, proposed_offset):
         proposed_positions = area.get_absolute_positions(offset=proposed_offset)
+
         for (x, y) in proposed_positions:
             if x < 1 or x >= self.width - 1 or y < 1 or y >= self.height - 1:
                 return True
@@ -205,6 +208,10 @@ class Game:
             for pos in proposed_positions:
                 if pos in other_positions:
                     return True
+
+        if self.agent_pos in proposed_positions:
+            return True
+
         return False
 
     def _collides(self, area, off):
