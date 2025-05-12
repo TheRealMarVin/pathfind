@@ -16,20 +16,19 @@ class Game:
                  maps_to_test: int = 3,
                  spawns_per_map: int = 2,
                  map_seed: int | None = None):
-        # experiment configuration
         self.agent_types       = agent_types
         self.maps_to_test      = maps_to_test
         self.spawns_per_map    = spawns_per_map
         self.number_of_iterations = len(agent_types) * maps_to_test * spawns_per_map
 
-        # indices
         self.cur_agent_idx = 0
         self.cur_map_idx = 0
         self.cur_spawn_idx = 0
 
-        # map generation
         self.map_seed = map_seed or random.randrange(2**32)
         self.map_random_generator = random.Random(self.map_seed)
+
+        self.spawn_data = {}
 
         self._generate_new_map()
         self._spawn_agent()
@@ -61,9 +60,9 @@ class Game:
             pygame.draw.rect(surface, COLOR_GOAL, rect)
 
     def _generate_new_map(self):
-        cfg          = config.CONFIG["map"]
-        self.width   = cfg["grid_width"]
-        self.height  = cfg["grid_height"]
+        cfg = config.CONFIG["map"]
+        self.width = cfg["grid_width"]
+        self.height = cfg["grid_height"]
         self.cell_sz = cfg["cell_size"]
 
         self.map = Map(self.width, self.height, self.cell_sz)
@@ -72,32 +71,54 @@ class Game:
         for area in self.dynamic_areas + self.static_areas:
             area.init_offset = area.offset
 
-        self.cur_spawn_idx = 0
+        self.spawn_data[(self.cur_map_idx, self.cur_spawn_idx)] = {}
 
     def _spawn_agent(self):
+        key = (self.cur_map_idx, self.cur_spawn_idx)
+        if key not in self.spawn_data:
+            self.spawn_data[key] = {}
+
         for area in self.dynamic_areas + self.static_areas:
             area.offset = area.init_offset
 
         self.map.update(self.static_areas + self.dynamic_areas)
 
-        self.start_pos = self.map.find_free_position(2)
-        self.goal_pos  = self.map.find_free_position(2, ignore_positions=[self.start_pos])
-        self.agent_pos = self.start_pos
+        key = (self.cur_map_idx, self.cur_spawn_idx)
+
+        if self.cur_agent_idx == 0 or "start" not in self.spawn_data[key]:
+            start_pos = self.map.find_free_position(2)
+            goal_pos = self.map.find_free_position(2, ignore_positions=[start_pos])
+            self.spawn_data[key]["start"] = start_pos
+            self.spawn_data[key]["goal"] = goal_pos
+        else:
+            start_pos = self.spawn_data[key]["start"]
+            goal_pos = self.spawn_data[key]["goal"]
+
+        self.start_pos = start_pos
+        self.goal_pos = goal_pos
+        self.agent_pos = start_pos
 
         agent_type = self.agent_types[self.cur_agent_idx]
         if agent_type == 'dstar':
-            self.agent = DStarLiteAgent(self.start_pos, self.goal_pos)
+            self.agent = DStarLiteAgent(start_pos, goal_pos)
         else:
-            self.agent = AStarAgent(self.start_pos, self.goal_pos)
+            self.agent = AStarAgent(start_pos, goal_pos)
 
         self.last_update = pygame.time.get_ticks()
 
-        # Display information in console
         print(f"Agent: {agent_type}, Map #{self.cur_map_idx+1}, Spawn #{self.cur_spawn_idx+1}")
-        print(f"  Start: {self.start_pos} -> Goal: {self.goal_pos}\n")
+        print(f"  Start: {start_pos} -> Goal: {goal_pos}\n")
 
     def _on_goal_reached(self):
+        self.cur_agent_idx += 1
+
+        if self.cur_agent_idx < len(self.agent_types):
+            self._spawn_agent()
+            return
+
+        self.cur_agent_idx = 0
         self.cur_spawn_idx += 1
+
         if self.cur_spawn_idx < self.spawns_per_map:
             self._spawn_agent()
             return
@@ -110,29 +131,11 @@ class Game:
             self.map_random_generator = random.Random(self.map_seed)
             self._generate_new_map()
             self._spawn_agent()
-            return
-
-        self.cur_map_idx = 0
-        self.cur_agent_idx += 1
-
-        if self.cur_agent_idx < len(self.agent_types):
-            self.map_seed = random.randrange(2**32)
-            self.map_random_generator = random.Random(self.map_seed)
-            self._generate_new_map()
-            self._spawn_agent()
-        else:
-            pygame.event.post(pygame.event.Event(pygame.QUIT))
-
-        if self.cur_agent_idx < len(self.agent_types):
-            self.map_seed = random.randrange(2**32)
-            self.map_random_generator = random.Random(self.map_seed)
-            self._generate_new_map()
-            self._spawn_agent()
         else:
             pygame.event.post(pygame.event.Event(pygame.QUIT))
 
     def _create_areas(self):
-        static, dynamic = [], []
+        static, dynamic = [] , []
         width = self.width
         height = self.height
 
@@ -147,7 +150,7 @@ class Game:
         move_opts = [(-1, 0), (1, 0), (0, -1), (0, 1),
                      (-1, -1), (-1, 1), (1, -1), (1, 1)]
         for i in range(NUM_DYNAMIC_AREAS):
-            shape = random_shape(is_dynamic=True, rng=self.map_random_generator)
+            shape = random_shape(is_dynamic=True, random_generator=self.map_random_generator)
             off_x = self.map_random_generator.randint(1, width - max(x for x, _ in shape) - 2)
             off_y = self.map_random_generator.randint(1, height - max(y for _, y in shape) - 2)
             move_pattern = self.map_random_generator.choice(move_opts)
