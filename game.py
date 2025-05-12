@@ -38,9 +38,8 @@ class Game:
         if now - self.last_update >= UPDATE_INTERVAL:
             self.last_update = now
             self.agent.update(self.map)
-
-        self._update_objects()
-        self.map.update(self.static_areas + self.dynamic_areas)
+            self._update_objects()
+            self.map.update(self.static_areas + self.dynamic_areas)
 
         if self.agent.has_reached_goal():
             self._on_goal_reached()
