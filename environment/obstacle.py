@@ -1,21 +1,29 @@
 class ObstacleArea:
-    def __init__(self, cells, move_pattern=(0, 0), name=None):
-        """
-        cells: list of (x, y) positions defining the shape (relative to a local origin).
-        move_pattern: (dx, dy) movement to apply each update.
-        name: optional identifier.
-        """
-        self.cells = cells
-        self.move_pattern = move_pattern
-        self.original_move_pattern = move_pattern
-        self.name = name or f"Area_{id(self)}"
-        self.offset = (0, 0)  # current position offset on the grid
+    def __init__(self, cells: list[tuple[int, int]], offset: tuple[int, int] = (0, 0), move_pattern: tuple[int, int] = (0, 0)):
+        self.cells = cells                                 # Relative cell positions (shape)
+        self.initial_offset = offset                       # Initial offset (for reset)
+        self.initial_move_pattern = move_pattern           # Initial movement pattern (for reset)
+        self.offset = offset                               # Current world offset (x, y)
+        self.move_pattern = move_pattern                   # Current movement direction per step
 
-    def get_absolute_positions(self, offset=None):
-        """Return the positions of the shape cells on the grid based on offset.
-           If offset is None, use the current offset.
-        """
-        if offset is None:
-            offset = self.offset
-        ox, oy = offset
-        return [(x + ox, y + oy) for (x, y) in self.cells]
+    def get_absolute_positions(self) -> list[tuple[int, int]]:
+        ox, oy = self.offset
+        return [(x + ox, y + oy) for x, y in self.cells]
+
+    def set_move_pattern(self, dx: int, dy: int):
+        self.move_pattern = (dx, dy)
+
+    def plan_move(self) -> tuple[int, int]:
+        dx, dy = self.move_pattern
+        ox, oy = self.offset
+        return ox + dx, oy + dy
+
+    def execute_move(self, x: int, y: int):
+        self.offset = (x, y)
+
+    def reset(self):
+        self.offset = self.initial_offset
+        self.move_pattern = self.initial_move_pattern
+
+    def copy_with_new_offset(self, offset: tuple[int, int]) -> "ObstacleArea":
+        return ObstacleArea(self.cells, offset, self.move_pattern)

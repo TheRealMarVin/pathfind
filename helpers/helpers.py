@@ -13,7 +13,7 @@ def make_block(width, height):
     """Return a list of (x, y) positions for a block (rectangle) starting at (0,0)."""
     return [(x, y) for y in range(height) for x in range(width)]
 
-def random_shape(is_dynamic, random_generator):
+def random_shape(random_generator):
     """
     Randomly select a shape template.
     For dynamic obstacles, you might allow slightly different options.

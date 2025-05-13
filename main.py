@@ -33,9 +33,6 @@ def main(config):
         pygame.display.flip()
         clock.tick(config["game"]["fps"])
 
-        if game.number_of_iterations <= 0:
-            running = False
-
     pygame.quit()
 
 if __name__ == "__main__":
