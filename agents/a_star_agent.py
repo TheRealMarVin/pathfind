@@ -24,7 +24,7 @@ class AStarAgent(Agent):
                     yield (nx, ny)
 
     def _plan_path(self, game_map):
-        start, goal = self.start, self.goal
+        start, goal = self.position, self.goal
         heap = [(0 + self.heuristic(start, goal), 0, start, [])]
         visited = set()
 
