@@ -21,6 +21,7 @@ class Game:
 
         self.current_map_index = 0
         self.current_spawn_index = 0
+        self.current_agent_index = 0
 
         self.map = None
         self.agent = None
@@ -33,28 +34,28 @@ class Game:
 
     def _init_map(self):
         seed = self.map_seed or random.randint(0, 99999)
-        random_generator = random.Random(seed)
+        self.random_generator = random.Random(seed)
 
         self.map = Map(
             config.CONFIG['map']['grid_width'],
             config.CONFIG['map']['grid_height'],
-            random_generator,
+            self.random_generator,
             NUM_STATIC_AREAS,
             NUM_DYNAMIC_AREAS
         )
 
         self.spawn_data.clear()
-        for _ in range(self.spawns_per_map):
+        for i in range(self.spawns_per_map):
             start = self.map.find_free_position()
             goal = self.map.find_free_position(ignore=[start])
-            self.spawn_data[_] = {"start": start, "goal": goal}
+            self.spawn_data[i] = {"start": start, "goal": goal}
 
     def _spawn_agent(self):
         key = self.current_spawn_index
         start_pos = self.spawn_data[key]["start"]
         goal_pos = self.spawn_data[key]["goal"]
 
-        agent_type = self.agent_types[self.current_map_index % len(self.agent_types)]
+        agent_type = self.agent_types[self.current_agent_index % len(self.agent_types)]
 
         if agent_type == "astar":
             self.agent = AStarAgent(start_pos, goal_pos)
@@ -62,6 +63,8 @@ class Game:
             self.agent = DStarLiteAgent(start_pos, goal_pos)
         else:
             raise ValueError(f"Unknown agent type: {agent_type}")
+
+        print(f"Agent: {agent_type}, Map #{self.current_map_index + 1}, Spawn #{self.current_spawn_index + 1}\n  Start: {start_pos} -> Goal: {goal_pos}\n")
 
     def update(self):
         now = pygame.time.get_ticks()
@@ -74,21 +77,31 @@ class Game:
             self._on_goal_reached()
 
     def _on_goal_reached(self):
-        self.current_spawn_index += 1
-        if self.current_spawn_index >= self.spawns_per_map:
-            self.current_spawn_index = 0
-            self.current_map_index += 1
-            if self.current_map_index >= self.maps_to_test:
-                pygame.quit()
-                raise SystemExit("Simulation complete")
-            self._init_map()
+        self.current_agent_index += 1
+        if self.current_agent_index >= len(self.agent_types):
+            self.current_agent_index = 0
+            self.current_spawn_index += 1
+
+            if self.current_spawn_index >= self.spawns_per_map:
+                self.current_spawn_index = 0
+                self.current_map_index += 1
+
+                if self.current_map_index >= self.maps_to_test:
+                    pygame.quit()
+                    raise SystemExit("And... it's done!")
+
+                self._init_map()
+            else:
+                self.map.reset()
+
+        else:
+            self.map.reset()
+
         self._spawn_agent()
 
     def draw(self, surface):
         self.agent.draw(surface)
         self.map.draw(surface, self.cell_size)
-
-
 
         # Draw goal
         gx, gy = self.agent.goal
