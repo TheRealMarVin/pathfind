@@ -12,6 +12,9 @@ class Game:
     def __init__(self, map_seed: int | None = None):
         if config.CONFIG['game']['seed'] is not None:
             map_seed = config.CONFIG['game']['seed']
+        else:
+            self.map_seed = random.randint(0, 99999)
+
         self.map_seed = map_seed
 
         self.agent_types = config.CONFIG['game']['agent_types']
@@ -35,7 +38,8 @@ class Game:
         self._spawn_agent()
 
     def _init_map(self):
-        seed = self.map_seed or random.randint(0, 99999)
+        seed = self.map_seed + self.current_map_index
+
         self.random_generator = random.Random(seed)
         np.random.seed(seed)
 
