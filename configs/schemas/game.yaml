@@ -2,7 +2,7 @@ description: Describe how the game should work
 update_interval:
   description: ms between dynamic obstacle moves or movement
   required: false
-  default: 30
+  default: 500
   type: int
 fps:
   description: Desired frames per second for the game loop

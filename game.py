@@ -5,7 +5,7 @@ import random
 
 from agents.a_star_agent import AStarAgent
 from agents.d_star_lite_agent import DStarLiteAgent
-from constants import COLOR_GOAL, NUM_STATIC_AREAS, NUM_DYNAMIC_AREAS, UPDATE_INTERVAL, COLOR_AGENT
+from constants import COLOR_GOAL, NUM_STATIC_AREAS, NUM_DYNAMIC_AREAS, COLOR_AGENT
 from environment.map import Map
 
 
@@ -18,6 +18,7 @@ class Game:
         self.agent_types = config.CONFIG['game']['agent_types']
         self.maps_to_test = config.CONFIG['game']['maps_to_test']
         self.spawns_per_map = config.CONFIG['game']['spawns_per_map']
+        self.update_interval = config.CONFIG['game']['update_interval']
 
         self.current_map_index = 0
         self.current_spawn_index = 0
@@ -69,7 +70,7 @@ class Game:
 
     def update(self):
         now = pygame.time.get_ticks()
-        if now - self.last_update >= UPDATE_INTERVAL:
+        if now - self.last_update >= self.update_interval:
             self.last_update = now
             self.map.update(self.agent.position)
             self.agent.update(self.map)
