@@ -3,7 +3,6 @@ import pygame
 import random
 
 from config import load_config
-from constants import COLOR_BG
 from game import Game
 
 
@@ -17,6 +16,7 @@ def main(config):
     game = Game()
 
     running = True
+    background_color = config["color_background"]
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -28,7 +28,7 @@ def main(config):
                     game.reset_new_map()
 
         game.update()
-        screen.fill(COLOR_BG)
+        screen.fill(background_color)
         game.draw(screen)
         pygame.display.flip()
         clock.tick(config["game"]["fps"])

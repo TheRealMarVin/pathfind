@@ -10,6 +10,11 @@ grid_height:
   required: false
   default: 40
   type: int
+erosion_size:
+  description: number of cells that are padded around abjects
+  required: false
+  default: 1
+  type: int
 cell_size:
   description: pixel size of each cell
   required: false
@@ -25,4 +30,24 @@ num_dynamic_areas:
   required: false
   default: 5
   type: int
-
+color_obstacle:
+  description: Color for the obstacles.
+  required: false
+  default: [0, 0, 0]
+  value_range: [0, 255]
+  length_range: [3,3]
+  type: list(int)
+color_grid_line:
+  description: Color for the grid lines separating the tiles.
+  required: false
+  default: [200, 200, 200]
+  value_range: [0, 255]
+  length_range: [3,3]
+  type: list(int)
+color_erosion:
+  description: Color for the eroded cells around abstacles.
+  required: false
+  default: [255, 155, 155]
+  value_range: [0, 255]
+  length_range: [3,3]
+  type: list(int)

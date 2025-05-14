@@ -2,13 +2,16 @@ import numpy as np
 from scipy.ndimage import binary_dilation
 import pygame
 
-from constants import COLOR_OBSTACLE, COLOR_GRID_LINE, COLOR_EROSION
+import config
 from environment.obstacle import ObstacleArea
 from helpers.helpers import random_shape
 
 
 class Map:
     def __init__(self, width, height, random_generator, num_static=0, num_dynamic=0):
+        self.color_erosion = config.CONFIG['map']['color_erosion']
+        self.color_obstacle = config.CONFIG['map']['color_obstacle']
+        self.color_grid_line = config.CONFIG['map']['color_grid_line']
         self.width = width
         self.height = height
         self.grid = np.zeros((height, width), dtype=int)
@@ -123,11 +126,11 @@ class Map:
             for x in range(self.width):
                 rect = pygame.Rect(x * cell_size, y * cell_size, cell_size, cell_size)
                 if self.grid[y, x] == 1:
-                    pygame.draw.rect(surface, COLOR_OBSTACLE, rect)
+                    pygame.draw.rect(surface, self.color_obstacle, rect)
                 elif self.erosion[y, x]:
-                    pygame.draw.rect(surface, COLOR_EROSION, rect)
+                    pygame.draw.rect(surface, self.color_erosion, rect)
 
         for x in range(self.width):
-            pygame.draw.line(surface, COLOR_GRID_LINE, (x * cell_size, 0), (x * cell_size, self.height * cell_size))
+            pygame.draw.line(surface, self.color_grid_line, (x * cell_size, 0), (x * cell_size, self.height * cell_size))
         for y in range(self.height):
-            pygame.draw.line(surface, COLOR_GRID_LINE, (0, y * cell_size), (self.width * cell_size, y * cell_size))
+            pygame.draw.line(surface, self.color_grid_line, (0, y * cell_size), (self.width * cell_size, y * cell_size))
