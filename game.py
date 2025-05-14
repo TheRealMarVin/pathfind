@@ -1,4 +1,5 @@
 import config
+import numpy as np
 import pygame
 import random
 
@@ -34,6 +35,7 @@ class Game:
     def _init_map(self):
         seed = self.map_seed or random.randint(0, 99999)
         self.random_generator = random.Random(seed)
+        np.random.seed(seed)
 
         self.map = Map(
             config.CONFIG['map']['grid_width'],
