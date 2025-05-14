@@ -29,3 +29,17 @@ spawns_per_map:
   required: false
   default: 2
   type: int
+color_agent:
+  description: Color for current position.
+  required: false
+  default: [0, 0, 255]
+  value_range: [0, 255]
+  length_range: [3,3]
+  type: list(int)
+color_goal:
+  description: Color for the goal position.
+  required: false
+  default: [255, 0, 0]
+  value_range: [0, 255]
+  length_range: [3,3]
+  type: list(int)

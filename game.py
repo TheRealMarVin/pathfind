@@ -5,7 +5,6 @@ import random
 
 from agents.a_star_agent import AStarAgent
 from agents.d_star_lite_agent import DStarLiteAgent
-from constants import COLOR_GOAL, COLOR_AGENT
 from environment.map import Map
 
 
@@ -19,6 +18,8 @@ class Game:
         self.maps_to_test = config.CONFIG['game']['maps_to_test']
         self.spawns_per_map = config.CONFIG['game']['spawns_per_map']
         self.update_interval = config.CONFIG['game']['update_interval']
+        self.color_goal = config.CONFIG['game']['color_goal']
+        self.color_agent = config.CONFIG['game']['color_agent']
 
         self.current_map_index = 0
         self.current_spawn_index = 0
@@ -109,7 +110,7 @@ class Game:
         gx, gy = self.agent.goal
         pygame.draw.rect(
             surface,
-            COLOR_GOAL,
+            self.color_goal,
             pygame.Rect(gx * self.cell_size, gy * self.cell_size, self.cell_size, self.cell_size)
         )
 
@@ -117,6 +118,6 @@ class Game:
         ax, ay = self.agent.position
         pygame.draw.rect(
             surface,
-            COLOR_AGENT,
+            self.color_agent,
             pygame.Rect(ax * self.cell_size, ay * self.cell_size, self.cell_size, self.cell_size)
         )
