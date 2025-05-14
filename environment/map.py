@@ -61,17 +61,19 @@ class Map:
                 new_y = abs_y + dy
 
                 # --- Check X direction ---
-                if not (0 <= new_x < self.width):
-                    block_x = True
-                elif self.grid[abs_y, new_x] == 1 and (new_x, abs_y) not in old_positions:
+                if (new_x < 0 or new_x >= self.width or
+                        abs_y < 0 or abs_y >= self.height or
+                        (self.grid[abs_y, new_x] == 1 and (new_x, abs_y) not in old_positions) or
+                        (new_x, abs_y) == agent_pos):
                     block_x = True
                 elif (new_x, abs_y) == agent_pos:
                     block_x = True
 
                 # --- Check Y direction ---
-                if not (0 <= new_y < self.height):
-                    block_y = True
-                elif self.grid[new_y, abs_x] == 1 and (abs_x, new_y) not in old_positions:
+                if (new_y < 0 or new_y >= self.height or
+                        abs_x < 0 or abs_x >= self.width or
+                        (self.grid[new_y, abs_x] == 1 and (abs_x, new_y) not in old_positions) or
+                        (abs_x, new_y) == agent_pos):
                     block_y = True
                 elif (abs_x, new_y) == agent_pos:
                     block_y = True
