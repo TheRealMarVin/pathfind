@@ -1,6 +1,5 @@
 NUM_STATIC_AREAS = 20        # number of static (non-moving) obstacle groups
 NUM_DYNAMIC_AREAS = 5       # number of moving obstacle groups
-UPDATE_INTERVAL = 500       # ms between dynamic obstacle moves
 
 # Colors (RGB)
 COLOR_BG = (255, 255, 255)       # white background
