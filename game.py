@@ -9,18 +9,14 @@ from environment.map import Map
 
 
 class Game:
-    def __init__(self,
-                 agent_types: list[str] = ["dstar", "astar"],
-                 maps_to_test: int = 3,
-                 spawns_per_map: int = 2,
-                 map_seed: int | None = None):
+    def __init__(self, map_seed: int | None = None):
         if config.CONFIG['game']['seed'] is not None:
             map_seed = config.CONFIG['game']['seed']
         self.map_seed = map_seed
 
-        self.agent_types = agent_types
-        self.maps_to_test = maps_to_test
-        self.spawns_per_map = spawns_per_map
+        self.agent_types = config.CONFIG['game']['agent_types']
+        self.maps_to_test = config.CONFIG['game']['maps_to_test']
+        self.spawns_per_map = config.CONFIG['game']['spawns_per_map']
 
         self.current_map_index = 0
         self.current_spawn_index = 0
