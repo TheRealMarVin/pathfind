@@ -5,7 +5,7 @@ import random
 
 from agents.a_star_agent import AStarAgent
 from agents.d_star_lite_agent import DStarLiteAgent
-from constants import COLOR_GOAL, NUM_STATIC_AREAS, NUM_DYNAMIC_AREAS, COLOR_AGENT
+from constants import COLOR_GOAL, COLOR_AGENT
 from environment.map import Map
 
 
@@ -42,8 +42,8 @@ class Game:
             config.CONFIG['map']['grid_width'],
             config.CONFIG['map']['grid_height'],
             self.random_generator,
-            NUM_STATIC_AREAS,
-            NUM_DYNAMIC_AREAS
+            config.CONFIG['map']['num_static_areas'],
+            config.CONFIG['map']['num_dynamic_areas']
         )
 
         self.spawn_data.clear()

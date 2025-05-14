@@ -1,4 +1,4 @@
-description: Describe scene use by the game
+description: Describe the scene use by the game
 
 grid_width:
   description: number of cells horizontally
@@ -15,3 +15,14 @@ cell_size:
   required: false
   default: 10
   type: int
+num_static_areas:
+  description: number of static (non-moving) obstacle groups
+  required: false
+  default: 20
+  type: int
+num_dynamic_areas:
+  description: number of moving obstacle groups
+  required: false
+  default: 5
+  type: int
+
