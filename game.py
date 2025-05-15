@@ -1,5 +1,4 @@
 import copy
-import datetime
 import json
 import os
 
@@ -8,6 +7,7 @@ import numpy as np
 import pygame
 import random
 
+from datetime import datetime
 from agents.a_star_agent import AStarAgent
 from agents.d_star_lite_agent import DStarLiteAgent
 from environment.map import Map
