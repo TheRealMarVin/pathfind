@@ -3,6 +3,12 @@ experiment_name:
   required: true
   type: str
 
+fps:
+  description: Desired frames per second for the game loop
+  required: false
+  default: 30
+  type: int
+
 game:
   $ref: ./game.yaml
   required: false

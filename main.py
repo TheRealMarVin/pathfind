@@ -31,7 +31,7 @@ def main(config):
         screen.fill(background_color)
         game.draw(screen)
         pygame.display.flip()
-        clock.tick(config["game"]["fps"])
+        clock.tick(config["fps"])
 
     pygame.quit()
 

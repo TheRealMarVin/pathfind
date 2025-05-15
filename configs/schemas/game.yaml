@@ -4,11 +4,6 @@ update_interval:
   required: false
   default: 500
   type: int
-fps:
-  description: Desired frames per second for the game loop
-  required: false
-  default: 30
-  type: int
 seed:
   description: Seed to use for the game
   required: false
