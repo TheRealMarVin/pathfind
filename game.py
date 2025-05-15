@@ -139,9 +139,11 @@ class Game:
         )
 
     def export_runtime_data(self):
+        name = config.CONFIG['experiment_name']
+
         # Create unique output folder
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        output_dir = os.path.join("outputs", timestamp)
+        output_dir = os.path.join("outputs", name + "-" + timestamp)
         os.makedirs(output_dir, exist_ok=True)
 
         # Write agent traces
