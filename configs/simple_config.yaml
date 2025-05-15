@@ -1,4 +1,4 @@
-agent_type: astar
+experiment_name: default_config
 
 game:
   seed: 42

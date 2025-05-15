@@ -1,7 +1,6 @@
-agent_type:
-  description: type of agent to use to explore pathfinding
-  required: false
-  default: astar
+experiment_name:
+  description: Name to use to reference this experiment
+  required: true
   type: str
 
 game:
