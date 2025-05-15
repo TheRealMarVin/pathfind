@@ -2,7 +2,6 @@ import config
 import pygame
 
 
-
 class Agent:
     def __init__(self, start, goal):
         self.cell_size = config.CONFIG["map"]["cell_size"]

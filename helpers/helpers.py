@@ -1,6 +1,3 @@
-import random
-
-
 def make_horizontal_line(length):
     """Return a list of (x, y) positions for a horizontal line starting at (0,0)."""
     return [(i, 0) for i in range(length)]

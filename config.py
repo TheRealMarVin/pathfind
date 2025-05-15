@@ -1,6 +1,6 @@
 import sys
+
 from pathlib import Path
-import yaml
 from readtheyaml.exceptions.validation_error import ValidationError
 from readtheyaml.schema import Schema
 
