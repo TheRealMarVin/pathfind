@@ -1,3 +1,8 @@
+import copy
+import datetime
+import json
+import os
+
 import config
 import numpy as np
 import pygame
@@ -33,6 +38,9 @@ class Game:
         self.spawn_data = {}
         self.last_update = 0
         self.cell_size = config.CONFIG['map']['cell_size']
+
+        self.agent_traces = []
+        self.map_traces={}
 
         self._init_map()
         self._spawn_agent()
@@ -84,7 +92,9 @@ class Game:
             self._on_goal_reached()
 
     def _on_goal_reached(self):
+        self.agent_traces.append({"agent_index": self.current_agent_index, "spawn_index": self.current_spawn_index, "map_index": self.current_map_index, "agent_visited": copy.deepcopy(self.agent.visited), "agent_explored": copy.deepcopy(list(self.agent.explored))})
         self.current_agent_index += 1
+
         if self.current_agent_index >= len(self.agent_types):
             self.current_agent_index = 0
             self.current_spawn_index += 1
@@ -94,6 +104,8 @@ class Game:
                 self.current_map_index += 1
 
                 if self.current_map_index >= self.maps_to_test:
+                    self.export_runtime_data()
+
                     pygame.quit()
                     raise SystemExit("And... it's done!")
 
@@ -125,3 +137,17 @@ class Game:
             self.color_agent,
             pygame.Rect(ax * self.cell_size, ay * self.cell_size, self.cell_size, self.cell_size)
         )
+
+    def export_runtime_data(self):
+        # Create unique output folder
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        output_dir = os.path.join("outputs", timestamp)
+        os.makedirs(output_dir, exist_ok=True)
+
+        # Write agent traces
+        with open(os.path.join(output_dir, "agent_output.json"), "w") as f:
+            json.dump(self.agent_traces, f, indent=4)
+
+        # Write map traces
+        with open(os.path.join(output_dir, "map_output.json"), "w") as f:
+            json.dump(self.map_traces, f, indent=4)
