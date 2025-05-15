@@ -1,7 +1,5 @@
 experiment_name: default_config
-
-game:
-  seed: 42
+seed: 42
 
 map:
   num_dynamic_areas: 0

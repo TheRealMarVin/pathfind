@@ -1,13 +1,9 @@
 description: Describe how the game should work
+
 update_interval:
   description: ms between dynamic obstacle moves or movement
   required: false
   default: 500
-  type: int
-seed:
-  description: Seed to use for the game
-  required: false
-  default: None
   type: int
 agent_types:
   description: List of agents to run and tests

@@ -14,11 +14,11 @@ from environment.map import Map
 
 
 class Game:
-    def __init__(self, map_seed: int | None = None):
-        if config.CONFIG['game']['seed'] is not None:
-            map_seed = config.CONFIG['game']['seed']
+    def __init__(self):
+        if config.CONFIG['seed'] is not None:
+            map_seed = config.CONFIG['seed']
         else:
-            self.map_seed = random.randint(0, 99999)
+            map_seed = random.randint(0, 99999)
 
         self.map_seed = map_seed
 

@@ -9,6 +9,12 @@ fps:
   default: 30
   type: int
 
+seed:
+  description: Seed to use for the game
+  required: false
+  default: None
+  type: int
+
 game:
   $ref: ./game.yaml
   required: false
