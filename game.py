@@ -65,6 +65,8 @@ class Game:
             goal = self.map.find_free_position(ignore=[start])
             self.spawn_data[i] = {"start": start, "goal": goal}
 
+        self.map_traces[self.current_map_index] = {"index":self.current_map_index, "seed":seed, "grid":self.map.grid, "erosion":self.map.erosion}
+
     def _spawn_agent(self):
         key = self.current_spawn_index
         start_pos = self.spawn_data[key]["start"]
