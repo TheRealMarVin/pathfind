@@ -17,8 +17,8 @@ def main(path, config):
     with open(os.path.join(path, "map_output.json"), "r") as f:
         map_data = json.load(f)
 
-    agent_type = "a_star" # TODO config
-    map_id = "0" # TODO should be in config
+    agent_type = config["agent_type"]
+    map_id = config["map_id"]
     grid = np.array(map_data[map_id]["grid"])
     erosion = np.array(map_data[map_id]["erosion"])
     #y,x = grid.shape
@@ -38,17 +38,14 @@ def main(path, config):
     plt.gca().invert_yaxis()  # Optional: to match the coordinate system
     plt.show()
 
-    # Define your color map: index corresponds to value in `display`
     cmap = ListedColormap([
         'white',  # 0 - unvisited
         'lightblue',  # 1 - visited
         'black',  # 2 - obstacle
         'gray'  # 3 - erosion
     ])
-    # Define boundaries between values: one more than the number of colors
     boundaries = [0, 1, 2, 3, 4]  # each value gets a bucket
 
-    # Create a normalizer that maps values to colormap indices
     norm = BoundaryNorm(boundaries, ncolors=4)
 
     legend_elements = [
@@ -71,8 +68,6 @@ def main(path, config):
     plt.grid(False)
     plt.legend(handles=legend_elements, loc='upper right')
     plt.show()
-
-    a = 0
 
 
 if __name__ == "__main__":
