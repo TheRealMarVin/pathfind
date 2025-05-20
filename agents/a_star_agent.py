@@ -10,11 +10,20 @@ class AStarAgent(Agent):
         self.planned = False
         self.lookahead_steps = lookahead_steps
 
-    def heuristic(self, a, b):
+    def update(self, game_map):
+        if not self.planned or self._should_replan(game_map):
+            self._plan_path(game_map)
+            self.planned = True
+
+        if self.plan:
+            self.position = self.plan.pop(0)
+            self.visited.append(self.position)
+
+    def _heuristic(self, a, b):
         distance = np.linalg.norm(np.array(a) - np.array(b))
         return distance
 
-    def get_neighbors(self, pos, game_map):
+    def _get_neighbors(self, pos, game_map):
         x, y = pos
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1), (-1, -1), (-1, 1), (1, -1), (1, 1)]
         for dx, dy in directions:
@@ -25,7 +34,7 @@ class AStarAgent(Agent):
 
     def _plan_path(self, game_map):
         start, goal = self.position, self.goal
-        heap = [(0 + self.heuristic(start, goal), 0, start, [])]
+        heap = [(0 + self._heuristic(start, goal), 0, start, [])]
         visited = set()
 
         while heap:
@@ -39,10 +48,10 @@ class AStarAgent(Agent):
                 self.plan = path + [goal]
                 return
 
-            for neighbor in self.get_neighbors(current, game_map):
+            for neighbor in self._get_neighbors(current, game_map):
                 if neighbor not in visited:
                     heapq.heappush(heap, (
-                        g + 1 + self.heuristic(neighbor, goal),
+                        g + 1 + self._heuristic(neighbor, goal),
                         g + 1,
                         neighbor,
                         path + [current]
@@ -58,12 +67,3 @@ class AStarAgent(Agent):
             if grid[y, x] != 0:
                 return True
         return False
-
-    def update(self, game_map):
-        if not self.planned or self._should_replan(game_map):
-            self._plan_path(game_map)
-            self.planned = True
-
-        if self.plan:
-            self.position = self.plan.pop(0)
-            self.visited.append(self.position)
