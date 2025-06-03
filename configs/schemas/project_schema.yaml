@@ -13,7 +13,7 @@ seed:
   description: Seed to use for the game
   required: false
   default: None
-  type: int
+  type: int | None
 
 game:
   $ref: ./game.yaml
