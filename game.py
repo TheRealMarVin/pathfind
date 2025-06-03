@@ -2,6 +2,8 @@ import copy
 import json
 import os
 
+import yaml
+
 import config
 import numpy as np
 import pygame
@@ -144,15 +146,15 @@ class Game:
     def export_runtime_data(self):
         name = config.CONFIG['experiment_name']
 
-        # Create unique output folder
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         output_dir = os.path.join("outputs", name + "-" + timestamp)
         os.makedirs(output_dir, exist_ok=True)
 
-        # Write agent traces
         with open(os.path.join(output_dir, "agent_output.json"), "w") as f:
             json.dump(self.agent_traces, f, indent=4)
 
-        # Write map traces
         with open(os.path.join(output_dir, "map_output.json"), "w") as f:
             json.dump(self.map_traces, f, indent=4)
+
+        with open('used_config.yaml', 'w') as f:
+            yaml.dump(config.CONFIG, f, default_flow_style=False, sort_keys=False)
