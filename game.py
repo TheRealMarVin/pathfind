@@ -61,11 +61,38 @@ class Game:
             config.CONFIG["map"]["num_dynamic_areas"]
         )
 
+        free_positions = self.map.get_free_positions()
+        max_possible_pairs = len(free_positions) * (len(free_positions) - 1)  # n * (n-1) since order matters
+        spawns_per_map = min(self.spawns_per_map, max_possible_pairs)
+
+        if spawns_per_map < self.spawns_per_map:
+            print(
+                f"Warning: Reduced spawns_per_map from {self.spawns_per_map} to {spawns_per_map} to respect map size constraints")
+
+        max_attempts = 250
         self.spawn_data.clear()
-        for i in range(self.spawns_per_map):
-            start = self.map.find_free_position()
-            goal = self.map.find_free_position(ignore=[start])
-            self.spawn_data[i] = {"start": start, "goal": goal}
+        used_pairs = set()
+        
+        for i in range(spawns_per_map):
+            attempts = 0
+            while attempts < max_attempts:
+                # Randomly select start and goal from free positions
+                start_idx, goal_idx = np.random.choice(len(free_positions), 2, replace=False)
+                start = free_positions[start_idx]
+                goal = free_positions[goal_idx]
+                
+                # Create a unique key for this pair (order matters)
+                pair_key = (start, goal)
+                
+                if pair_key not in used_pairs:
+                    used_pairs.add(pair_key)
+                    self.spawn_data[i] = {"start": start, "goal": goal}
+                    break
+                    
+                attempts += 1
+            else:
+                print(f"Warning: Could not find unique start-goal pair after {max_attempts} attempts")
+                break
 
         self.map_traces[self.current_map_index] = {"index":self.current_map_index, "seed":seed,
                                                    "grid":self.map.grid.tolist(), "erosion":self.map.erosion.tolist()}

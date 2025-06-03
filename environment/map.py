@@ -134,3 +134,11 @@ class Map:
             pygame.draw.line(surface, self.color_grid_line, (x * cell_size, 0), (x * cell_size, self.height * cell_size))
         for y in range(self.height):
             pygame.draw.line(surface, self.color_grid_line, (0, y * cell_size), (self.width * cell_size, y * cell_size))
+
+    def get_free_positions(self):
+        free_positions = []
+        for y in range(1, self.height - 1):
+            for x in range(1, self.width - 1):
+                if self.grid[y, x] == 0 and not self.erosion[y, x]:
+                    free_positions.append((x, y))
+        return free_positions
