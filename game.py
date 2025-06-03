@@ -17,19 +17,19 @@ from environment.map import Map
 
 class Game:
     def __init__(self):
-        if config.CONFIG['seed'] is not None:
-            map_seed = config.CONFIG['seed']
+        if config.CONFIG["seed"] is not None:
+            map_seed = config.CONFIG["seed"]
         else:
             map_seed = random.randint(0, 99999)
 
         self.map_seed = map_seed
 
-        self.agent_types = config.CONFIG['game']['agent_types']
-        self.maps_to_test = config.CONFIG['game']['maps_to_test']
-        self.spawns_per_map = config.CONFIG['game']['spawns_per_map']
-        self.update_interval = config.CONFIG['game']['update_interval']
-        self.color_goal = config.CONFIG['game']['color_goal']
-        self.color_agent = config.CONFIG['game']['color_agent']
+        self.agent_types = config.CONFIG["game"]["agent_types"]
+        self.maps_to_test = config.CONFIG["game"]["maps_to_test"]
+        self.spawns_per_map = config.CONFIG["game"]["spawns_per_map"]
+        self.update_interval = config.CONFIG["game"]["update_interval"]
+        self.color_goal = config.CONFIG["game"]["color_goal"]
+        self.color_agent = config.CONFIG["game"]["color_agent"]
 
         self.current_map_index = 0
         self.current_spawn_index = 0
@@ -39,7 +39,7 @@ class Game:
         self.agent = None
         self.spawn_data = {}
         self.last_update = 0
-        self.cell_size = config.CONFIG['map']['cell_size']
+        self.cell_size = config.CONFIG["map"]["cell_size"]
 
         self.agent_traces = []
         self.map_traces={}
@@ -54,11 +54,11 @@ class Game:
         np.random.seed(seed)
 
         self.map = Map(
-            config.CONFIG['map']['grid_width'],
-            config.CONFIG['map']['grid_height'],
+            config.CONFIG["map"]["grid_width"],
+            config.CONFIG["map"]["grid_height"],
             self.random_generator,
-            config.CONFIG['map']['num_static_areas'],
-            config.CONFIG['map']['num_dynamic_areas']
+            config.CONFIG["map"]["num_static_areas"],
+            config.CONFIG["map"]["num_dynamic_areas"]
         )
 
         self.spawn_data.clear()
@@ -156,5 +156,5 @@ class Game:
         with open(os.path.join(output_dir, "map_output.json"), "w") as f:
             json.dump(self.map_traces, f, indent=4)
 
-        with open('used_config.yaml', 'w') as f:
+        with open(os.path.join(output_dir, "used_config.yaml"), "w") as f:
             yaml.dump(config.CONFIG, f, default_flow_style=False, sort_keys=False)
