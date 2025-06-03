@@ -1,0 +1,12 @@
+experiment_name: single_map_config_250k
+seed: 42
+fps: 500
+
+game:
+  update_interval: 1
+  agent_types: [astar]
+  maps_to_test: 1
+  spawns_per_map: 250000
+
+map:
+  num_dynamic_areas: 0
