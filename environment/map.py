@@ -9,9 +9,9 @@ from helpers.helpers import random_shape
 
 class Map:
     def __init__(self, width, height, random_generator, num_static=0, num_dynamic=0):
-        self.color_erosion = config.CONFIG['map']['color_erosion']
-        self.color_obstacle = config.CONFIG['map']['color_obstacle']
-        self.color_grid_line = config.CONFIG['map']['color_grid_line']
+        self.color_erosion = config.CONFIG["map"]["color_erosion"]
+        self.color_obstacle = config.CONFIG["map"]["color_obstacle"]
+        self.color_grid_line = config.CONFIG["map"]["color_grid_line"]
         self.width = width
         self.height = height
         self.grid = np.zeros((height, width), dtype=int)

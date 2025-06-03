@@ -39,7 +39,7 @@ class DStarLiteAgent(Agent):
             self._extract_path(game_map)
 
         if not self.plan:
-            self.rhs[self.position] = float('inf')
+            self.rhs[self.position] = float("inf")
             self._update_vertex(self.position, game_map)
             self._compute_shortest_path(game_map)
             self._extract_path(game_map)
@@ -65,13 +65,13 @@ class DStarLiteAgent(Agent):
         self.g.clear()
         self.rhs.clear()
         self.update_queue.clear()
-        self.g[self.goal] = float('inf')
+        self.g[self.goal] = float("inf")
         self.rhs[self.goal] = 0
         heapq.heappush(self.update_queue, (self._calculate_key(self.goal), self.goal))
         self.initialized = True
 
     def _calculate_key(self, state):
-        g_rhs = min(self.g.get(state, float('inf')), self.rhs.get(state, float('inf')))
+        g_rhs = min(self.g.get(state, float("inf")), self.rhs.get(state, float("inf")))
         return (g_rhs + self._heuristic(self.position, state) + self.distance_since_last_update, g_rhs)
 
     @staticmethod
@@ -93,14 +93,14 @@ class DStarLiteAgent(Agent):
         if node != self.goal:
             neighbors = list(self._get_neighbors(node, game_map))
             if neighbors:
-                self.rhs[node] = min(self.g.get(n, float('inf')) + 1 for n in neighbors)
+                self.rhs[node] = min(self.g.get(n, float("inf")) + 1 for n in neighbors)
             else:
-                self.rhs[node] = float('inf')
+                self.rhs[node] = float("inf")
 
         self.update_queue = [e for e in self.update_queue if e[1] != node]
         heapq.heapify(self.update_queue)
 
-        if self.g.get(node, float('inf')) != self.rhs.get(node, float('inf')):
+        if self.g.get(node, float("inf")) != self.rhs.get(node, float("inf")):
             heapq.heappush(self.update_queue, (self._calculate_key(node), node))
 
     def _compute_shortest_path(self, game_map, max_expansions=50000):
@@ -115,17 +115,17 @@ class DStarLiteAgent(Agent):
                 continue
 
             if not (k_old < k_start or
-                    self.rhs.get(self.position, float('inf')) != self.g.get(self.position, float('inf'))):
+                    self.rhs.get(self.position, float("inf")) != self.g.get(self.position, float("inf"))):
                 return
 
             self.explored.add(u)
 
-            if self.g.get(u, float('inf')) > self.rhs.get(u, float('inf')):
+            if self.g.get(u, float("inf")) > self.rhs.get(u, float("inf")):
                 self.g[u] = self.rhs[u]
                 for n in self._get_neighbors(u, game_map):
                     self._update_vertex(n, game_map)
             else:
-                self.g[u] = float('inf')
+                self.g[u] = float("inf")
                 self._update_vertex(u, game_map)
                 for n in self._get_neighbors(u, game_map):
                     self._update_vertex(n, game_map)
@@ -144,7 +144,7 @@ class DStarLiteAgent(Agent):
     def _extract_path(self, game_map):
         self.plan = []
 
-        if self.g.get(self.position, float('inf')) == float('inf'):
+        if self.g.get(self.position, float("inf")) == float("inf"):
             return
 
         visited = set()
@@ -156,13 +156,13 @@ class DStarLiteAgent(Agent):
             visited.add(pos)
 
             best_next = None
-            best_val = float('inf')
+            best_val = float("inf")
             for n in self._get_neighbors(pos, game_map):
-                val = 1 + self.g.get(n, float('inf'))
+                val = 1 + self.g.get(n, float("inf"))
                 if val < best_val:
                     best_val, best_next = val, n
 
-            if best_next is None or best_val == float('inf') or best_next in visited:
+            if best_next is None or best_val == float("inf") or best_next in visited:
                 break
 
             self.plan.append(best_next)
