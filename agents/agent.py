@@ -10,7 +10,7 @@ class Agent:
         self.position = start
         self.plan = []  # list of (x, y) steps
         self.explored = set()  # for planning visualization
-        self.visited = [start]  # for movement visualization
+        self.visited = []  # for movement visualization
 
     def update(self, game_map):
         """
