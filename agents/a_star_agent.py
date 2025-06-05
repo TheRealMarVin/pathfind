@@ -1,5 +1,5 @@
 import heapq
-import numpy as np
+import math
 
 from agents.agent import Agent
 
@@ -20,8 +20,9 @@ class AStarAgent(Agent):
             self.visited.append(self.position)
 
     def _heuristic(self, a, b):
-        distance = np.linalg.norm(np.array(a) - np.array(b))
-        return distance
+        # here we use Octile distance because it is closer to our movement scheme.
+        dx, dy = abs(a[0] - b[0]), abs(a[1] - b[1])
+        return max(dx, dy) + (math.sqrt(2) - 1) * min(dx, dy)
 
     def _get_neighbors(self, pos, game_map):
         x, y = pos
@@ -30,15 +31,16 @@ class AStarAgent(Agent):
             nx, ny = x + dx, y + dy
             if 0 <= nx < game_map.grid.shape[1] and 0 <= ny < game_map.grid.shape[0]:
                 if game_map.grid[ny, nx] == 0 and not game_map.erosion[ny, nx]:
-                    yield (nx, ny)
+                    move_cost = math.hypot(dx, dy)
+                    yield (nx, ny), move_cost
 
     def _plan_path(self, game_map):
         start, goal = self.position, self.goal
-        heap = [(0 + self._heuristic(start, goal), 0, start, [])]
+        nodes_to_explore = [(self._heuristic(start, goal), 0.0, start, [])]
         visited = set()
 
-        while heap:
-            f, g, current, path = heapq.heappop(heap)
+        while nodes_to_explore:
+            total_cost, path_cost, current, path = heapq.heappop(nodes_to_explore)
             if current in visited:
                 continue
             visited.add(current)
@@ -48,14 +50,11 @@ class AStarAgent(Agent):
                 self.plan = path + [goal]
                 return
 
-            for neighbor in self._get_neighbors(current, game_map):
+            for (neighbor, move_cost) in self._get_neighbors(current, game_map):
                 if neighbor not in visited:
-                    heapq.heappush(heap, (
-                        g + 1 + self._heuristic(neighbor, goal),
-                        g + 1,
-                        neighbor,
-                        path + [current]
-                    ))
+                    new_path_cost = path_cost + move_cost
+                    new_total_cost = new_path_cost + self._heuristic(neighbor, goal)
+                    heapq.heappush(nodes_to_explore, (new_total_cost, new_path_cost, neighbor, path + [current]))
 
         self.plan = []
 
