@@ -1,0 +1,12 @@
+experiment_name: single_map_config_no_obstacles
+seed: 42
+
+game:
+  update_interval: 50
+  agent_types: [astar]
+  maps_to_test: 1
+  spawns_per_map: 10000
+
+map:
+  num_dynamic_areas: 0
+  num_static_areas: 0
