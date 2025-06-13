@@ -53,7 +53,9 @@ class AStarAgent(Agent):
             for (neighbor, move_cost) in self._get_neighbors(current, game_map):
                 if neighbor not in visited:
                     new_path_cost = path_cost + move_cost
-                    new_total_cost = new_path_cost + self._heuristic(neighbor, goal)
+                    # (1 + 1e-4) is a small trick to break ties and favor depth over width.
+                    # The small epsilon will affect the heuristic a bit more a favor deeper nodes
+                    new_total_cost = new_path_cost + ((1 + 1e-4) * self._heuristic(neighbor, goal))
                     heapq.heappush(nodes_to_explore, (new_total_cost, new_path_cost, neighbor, path + [current]))
 
         self.plan = []
