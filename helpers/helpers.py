@@ -29,3 +29,4 @@ def random_shape(random_generator):
     elif shape_type == "L":
         # A simple L-shape: three cells
         return [(0, 0), (1, 0), (0, 1)]
+    raise RuntimeError("Failed to generate un expected shape.")

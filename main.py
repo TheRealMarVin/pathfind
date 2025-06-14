@@ -11,7 +11,6 @@ def main(config):
     pygame.display.set_caption("Map Generator & Path Planning Experiment")
     clock = pygame.time.Clock()
 
-    # Create an Experiment instance (base does nothing) and a Game instance.
     game = Game()
 
     running = True
