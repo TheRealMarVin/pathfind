@@ -37,9 +37,6 @@ def find_start_and_goal_positions(spawns_per_map, free_positions):
     return spawn_data
 
 def create_map(seed):
-    # TODO needed before
-    #seed = self.map_seed + self.current_map_index
-
     random_generator = random.Random(seed)
     np.random.seed(seed)
 
