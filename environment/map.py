@@ -4,7 +4,7 @@ import pygame
 
 import config
 from environment.obstacle import ObstacleArea
-from helpers.helpers import random_shape
+from helpers.map_helpers import random_shape
 
 
 class Map:
