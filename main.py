@@ -14,6 +14,8 @@ import config
 from config import load_config
 from environment.map import Map
 from game import Game
+from helpers.export_helpers import export_runtime_data
+
 
 # TODO should not be here!!!
 def find_start_and_goal_positions(spawns_per_map, free_positions):
@@ -105,22 +107,6 @@ def create_tasks():
             map_seed += 1
 
     return tasks
-
-def export_runtime_data(agent_traces, map_traces):
-    name = config.CONFIG['experiment_name']
-
-    timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    output_dir = os.path.join("outputs", name + "-" + timestamp)
-    os.makedirs(output_dir, exist_ok=True)
-
-    with open(os.path.join(output_dir, "agent_output.json"), "w") as f:
-        json.dump(agent_traces, f, indent=4)
-
-    with open(os.path.join(output_dir, "map_output.json"), "w") as f:
-        json.dump(map_traces, f, indent=4)
-
-    with open(os.path.join(output_dir, "used_config.yaml"), "w") as f:
-        yaml.dump(config.CONFIG, f, default_flow_style=False, sort_keys=False)
 
 def main(config):
     index = 0

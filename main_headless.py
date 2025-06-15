@@ -15,7 +15,8 @@ import config
 from config import load_config
 from environment.map import Map
 from game import Game
-from main import create_tasks, TaskSpec, export_runtime_data
+from helpers.export_helpers import export_runtime_data
+from main import create_tasks, TaskSpec
 
 def run_task(task, fps):
     game = Game(task)
