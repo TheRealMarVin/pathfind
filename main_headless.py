@@ -6,7 +6,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from config import load_config
 from game_logic.game import Game
-from helpers.export_helpers import export_runtime_data
+from helpers.log_helpers import export_runtime_data
 from helpers.task_helpers import create_tasks
 
 
