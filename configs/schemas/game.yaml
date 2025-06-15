@@ -5,21 +5,6 @@ update_interval:
   required: false
   default: 500
   type: int
-agent_types:
-  description: List of agents to run and tests
-  required: false
-  default: ["dstar", "astar"]
-  type: list(str)
-maps_to_test:
-  description: Number of map to test
-  required: false
-  default: 10
-  type: int
-spawns_per_map:
-  description: Number of time each agent will spawn for every map.
-  required: false
-  default: 2
-  type: int
 color_agent:
   description: Color for current position.
   required: false
