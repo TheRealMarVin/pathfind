@@ -1,22 +1,14 @@
 import argparse
-import copy
-import json
-import os
-import random
 import time
-import yaml
-import numpy as np
 
-from datetime import datetime
 from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-import config
 from config import load_config
-from environment.map import Map
 from game import Game
 from helpers.export_helpers import export_runtime_data
-from main import create_tasks, TaskSpec
+from helpers.task_helpers import create_tasks
+
 
 def run_task(task, fps):
     game = Game(task)
