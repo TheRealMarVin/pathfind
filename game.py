@@ -106,8 +106,9 @@ class Game:
 
         print(f"Agent: {agent_type}, Map #{self.task.map_index}, Spawn #{self.task.position_index}\n  Start: {start_pos} -> Goal: {goal_pos}\n")
 
-    def update(self):
-        now = pygame.time.get_ticks()
+    def update(self, now):
+        # now = pygame.time.get_ticks()
+        # print(now - self.last_update)
         if now - self.last_update >= self.update_interval:
             self.last_update = now
             self.map.update(self.agent.position)

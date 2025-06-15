@@ -153,7 +153,8 @@ def main(config):
                 elif event.key == pygame.K_n:
                     game.reset_new_map()
 
-        game.update()
+        now = pygame.time.get_ticks()
+        game.update(now)
         screen.fill(background_color)
         game.draw(screen)
         pygame.display.flip()
