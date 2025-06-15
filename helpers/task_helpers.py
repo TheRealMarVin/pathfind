@@ -1,28 +1,12 @@
-import argparse
-import copy
-import json
 import numpy as np
-import os
-import pygame
 import random
-import yaml
 
-from datetime import datetime
 from tqdm import tqdm
 
 import config
-from config import load_config
 from environment.map import Map
+from game_logic.task_spec import TaskSpec
 
-
-class TaskSpec:
-    def __init__(self, seed, position_index, map_index, game_map, position_pairs, agent_type):
-        self.seed = seed
-        self.position_index = position_index
-        self.map_index = map_index
-        self.map = copy.deepcopy(game_map)
-        self.position_pairs = position_pairs
-        self.agent_type = agent_type
 
 def find_start_and_goal_positions(spawns_per_map, free_positions):
     max_attempts = 250
