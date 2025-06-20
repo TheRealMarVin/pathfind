@@ -4,10 +4,11 @@ from agents.agent import Agent
 
 
 class DStarLiteAgent(Agent):
-    def __init__(self, start, goal, lookahead_steps=5, verbose=False):
+    def __init__(self, start, goal, lookahead_steps=5, verbose=False, epsilon: float = 1e-4):
         super().__init__(start, goal)
         self.lookahead_steps = lookahead_steps
         self.verbose = verbose
+        self.epsilon = epsilon
 
         self.g = {}
         self.rhs = {}
@@ -73,6 +74,12 @@ class DStarLiteAgent(Agent):
     def _calculate_key(self, state):
         g_rhs = min(self.g.get(state, float("inf")), self.rhs.get(state, float("inf")))
         return (g_rhs + self._heuristic(self.position, state) + self.distance_since_last_update, g_rhs)
+
+    def _calculate_key(self, state):
+        g_rhs = min(self.g.get(state, float("inf")), self.rhs.get(state, float("inf")))
+
+        h = (1.0 + self.epsilon) * self._heuristic(self.position, state)
+        return (g_rhs + h + self.distance_since_last_update, g_rhs)
 
     @staticmethod
     def _heuristic(a, b):
