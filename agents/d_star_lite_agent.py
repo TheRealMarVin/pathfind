@@ -4,6 +4,10 @@ from agents.agent import Agent
 
 
 class DStarLiteAgent(Agent):
+    @property
+    def display_name(self):
+        return "d star"
+
     def __init__(self, start, goal, lookahead_steps=5, verbose=False, epsilon: float = 1e-4):
         super().__init__(start, goal)
         self.lookahead_steps = lookahead_steps

@@ -5,6 +5,10 @@ from agents.agent import Agent
 
 
 class AStarAgent(Agent):
+    @property
+    def display_name(self):
+        return "a star"
+
     def __init__(self, start, goal, lookahead_steps=5):
         super().__init__(start, goal)
         self.planned = False

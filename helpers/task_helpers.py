@@ -1,9 +1,13 @@
+from functools import partial
+
 import numpy as np
 import random
 
 from tqdm import tqdm
 
 import config
+from agents.a_star_agent import AStarAgent
+from agents.d_star_lite_agent import DStarLiteAgent
 from environment.map import Map
 from game_logic.task_spec import TaskSpec
 
@@ -62,6 +66,19 @@ def create_positions(map, spawns_per_map):
     start_goal_pairs = find_start_and_goal_positions(spawns_per_map, free_positions)
     return start_goal_pairs
 
+def _get_generation_agent(agent_type, positions):
+    start_pos = positions["start"]
+    goal_pos = positions["goal"]
+
+    if agent_type == "astar":
+        agent = partial(AStarAgent,start_pos, goal_pos)
+    elif agent_type == "dstar":
+        agent = partial(DStarLiteAgent, start_pos, goal_pos)
+    else:
+        raise ValueError(f"Unknown agent type: {agent_type}")
+
+    return agent
+
 def _create_generate_tasks(seed):
     maps_to_test = config.CONFIG["maps_to_test"]
     spawns_per_map = config.CONFIG["spawns_per_map"]
@@ -72,10 +89,12 @@ def _create_generate_tasks(seed):
         map_seed = seed + map_index
         current_map = create_map(map_seed)
         start_goal_pairs = create_positions(current_map, spawns_per_map)
-        for key, pair in start_goal_pairs.items():
-            for current_agent_type in agent_types:
+        for key, position_pairs in start_goal_pairs.items():
+            for agent_type in agent_types:
+                agent = _get_generation_agent(agent_type, position_pairs)
+
                 task = TaskSpec(seed=map_seed, position_index=key, map_index=map_index, game_map=current_map,
-                                position_pairs=pair, agent_type=current_agent_type)
+                                agent=agent)
                 tasks.append(task)
 
     return tasks
