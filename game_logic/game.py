@@ -2,9 +2,6 @@ import copy
 import config
 import pygame
 
-from agents.a_star_agent import AStarAgent
-from agents.d_star_lite_agent import DStarLiteAgent
-
 
 class Game:
     def __init__(self, task):

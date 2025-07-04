@@ -7,5 +7,4 @@ class TaskSpec:
         self.position_index = position_index
         self.map_index = map_index
         self.map = copy.deepcopy(game_map)
-        # self.position_pairs = position_pairs
         self.agent = agent
