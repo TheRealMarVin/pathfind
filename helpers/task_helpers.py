@@ -73,15 +73,16 @@ def create_tasks():
     agent_types = config.CONFIG["agent_types"]
 
     tasks = []
-    for current_agent_type in agent_types:
-        for map_index in tqdm(range(maps_to_test)):
-            seed = map_seed + map_index
-            current_map = create_map(seed)
-            start_goal_pairs = create_positions(current_map, spawns_per_map)
-            for key, pair in start_goal_pairs.items():
-                task = TaskSpec(seed=seed, position_index=key, map_index=map_index, game_map=current_map, position_pairs=pair, agent_type=current_agent_type)
+    for map_index in tqdm(range(maps_to_test)):
+        seed = map_seed + map_index
+        current_map = create_map(seed)
+        start_goal_pairs = create_positions(current_map, spawns_per_map)
+        for key, pair in start_goal_pairs.items():
+            for current_agent_type in agent_types:
+                task = TaskSpec(seed=seed, position_index=key, map_index=map_index, game_map=current_map,
+                                position_pairs=pair, agent_type=current_agent_type)
                 tasks.append(task)
 
-            map_seed += 1
+        map_seed += 1
 
     return tasks
