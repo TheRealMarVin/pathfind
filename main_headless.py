@@ -57,7 +57,7 @@ def run_experiments_parallel(config, max_workers=4):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run experiments in headless mode without GUI.")
-    parser.add_argument("--config", type=str, default="configs/simple_config.yaml", help="YAML config path")
+    parser.add_argument("--config", type=str, default="configs/simple_generate_config.yaml", help="YAML config path")
     parser.add_argument("--schema", type=str, default="configs/schemas/project_schema.yaml", help="YAML schema path")
     parser.add_argument("--workers", type=int, default=8, help="Number of parallel workers")
 

@@ -1,5 +1,6 @@
 experiment_name: default_config
 seed: 42
+runtime_type: Generate
 
 agent_types: [astar, dstar]
 maps_to_test: 1

@@ -17,6 +17,12 @@ seed:
   required: false
   default: None
   type: int | None
+runtime_type:
+  description: The way we want to manage the gameplay
+  required: true
+  values: [Generate, Replay]
+  type: enum
+
 agent_types:
   description: List of agents to run and tests
   required: false
@@ -32,6 +38,11 @@ spawns_per_map:
   required: false
   default: 2
   type: int
+replay_folder:
+  description: The folder to use to load replays
+  required: false
+  default: None
+  type: str | None
 
 game:
   $ref: ./game.yaml
