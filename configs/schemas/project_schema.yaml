@@ -2,6 +2,11 @@ experiment_name:
   description: Name to use to reference this experiment
   required: true
   type: str
+output_folder:
+  description: Output folder used to output traces
+  required: false
+  default: output
+  type: str
 fps:
   description: Desired frames per second for the game loop
   required: false

@@ -8,10 +8,11 @@ import config
 
 
 def export_runtime_data(agent_traces, map_traces):
-    name = config.CONFIG['experiment_name']
+    name = config.CONFIG["experiment_name"]
+    output_folder = config.CONFIG["output_folder"]
 
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-    output_dir = os.path.join("outputs", name + "-" + timestamp)
+    output_dir = os.path.join(output_folder, name + "-" + timestamp)
     os.makedirs(output_dir, exist_ok=True)
 
     with open(os.path.join(output_dir, "agent_output.json"), "w") as f:
