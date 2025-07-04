@@ -62,27 +62,31 @@ def create_positions(map, spawns_per_map):
     start_goal_pairs = find_start_and_goal_positions(spawns_per_map, free_positions)
     return start_goal_pairs
 
-def create_tasks():
-    if config.CONFIG["seed"] is not None:
-        map_seed = config.CONFIG["seed"]
-    else:
-        map_seed = random.randint(0, 99999)
-
+def _create_generate_tasks(seed):
     maps_to_test = config.CONFIG["maps_to_test"]
     spawns_per_map = config.CONFIG["spawns_per_map"]
     agent_types = config.CONFIG["agent_types"]
 
     tasks = []
     for map_index in tqdm(range(maps_to_test)):
-        seed = map_seed + map_index
-        current_map = create_map(seed)
+        map_seed = seed + map_index
+        current_map = create_map(map_seed)
         start_goal_pairs = create_positions(current_map, spawns_per_map)
         for key, pair in start_goal_pairs.items():
             for current_agent_type in agent_types:
-                task = TaskSpec(seed=seed, position_index=key, map_index=map_index, game_map=current_map,
+                task = TaskSpec(seed=map_seed, position_index=key, map_index=map_index, game_map=current_map,
                                 position_pairs=pair, agent_type=current_agent_type)
                 tasks.append(task)
 
-        map_seed += 1
+    return tasks
+
+def create_tasks():
+    if config.CONFIG["seed"] is not None:
+        seed = config.CONFIG["seed"]
+    else:
+        seed = random.randint(0, 99999)
+
+    if config.CONFIG["runtime_type"] == "Generate":
+        tasks = _create_generate_tasks(seed)
 
     return tasks
