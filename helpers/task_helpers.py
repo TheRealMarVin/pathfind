@@ -1,3 +1,5 @@
+import orjson
+import os
 from functools import partial
 
 import numpy as np
@@ -8,6 +10,7 @@ from tqdm import tqdm
 import config
 from agents.a_star_agent import AStarAgent
 from agents.d_star_lite_agent import DStarLiteAgent
+from agents.replay_agent import ReplayAgent
 from environment.map import Map
 from game_logic.task_spec import TaskSpec
 
@@ -99,13 +102,45 @@ def _create_generate_tasks(seed):
 
     return tasks
 
+def _create_replay_tasks(seed):
+    replay_folder = config.CONFIG["replay_folder"]
+
+    agent_file = os.path.join(replay_folder, "agent_output.json")
+    with open(agent_file, "r") as f:
+        agent_data = orjson.loads(f.read())
+
+    map_file = os.path.join(replay_folder, "map_output.json")
+    with open(map_file, "r") as f:
+        map_data = orjson.loads(f.read())
+
+    tasks = []
+    for agent_trace in tqdm(agent_data):
+        map_index = agent_trace["map_index"]
+        map_seed = map_data[str(map_index)]["seed"]
+        spawn_index = agent_trace["spawn_index"]
+        positions = agent_trace["agent_visited"]
+
+        current_map = create_map(map_seed)
+
+        if len(positions) < 2:
+            raise ValueError(f"Some of the paths are too short")
+        agent = partial(ReplayAgent, positions[0], positions[-1], plan=positions)
+        task = TaskSpec(seed=map_seed, position_index=spawn_index, map_index=map_index, game_map=current_map,
+                        agent=agent)
+        tasks.append(task)
+
+    return tasks
+
 def create_tasks():
     if config.CONFIG["seed"] is not None:
         seed = config.CONFIG["seed"]
     else:
         seed = random.randint(0, 99999)
 
-    if config.CONFIG["runtime_type"] == "Generate":
+    runtime_type = config.CONFIG["runtime_type"]
+    if runtime_type == "Generate":
         tasks = _create_generate_tasks(seed)
+    elif runtime_type == "Replay":
+        tasks = _create_replay_tasks(seed)
 
     return tasks
