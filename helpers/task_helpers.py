@@ -43,11 +43,11 @@ def find_start_and_goal_positions(spawns_per_map, free_positions):
 
     return spawn_data
 
-def create_map(seed):
+def create_map(seed, map_config):
     random_generator = random.Random(seed)
     np.random.seed(seed)
 
-    map = Map(random_generator=random_generator, **config.CONFIG["map"])
+    map = Map(random_generator=random_generator, **map_config)
 
     return map
 
@@ -84,7 +84,7 @@ def _create_generate_tasks(seed):
     tasks = []
     for map_index in tqdm(range(maps_to_test)):
         map_seed = seed + map_index
-        current_map = create_map(map_seed)
+        current_map = create_map(map_seed, config.CONFIG["map"])
         start_goal_pairs = create_positions(current_map, spawns_per_map)
         for key, position_pairs in start_goal_pairs.items():
             for agent_type in agent_types:
@@ -114,7 +114,7 @@ def _create_replay_tasks(seed):
         spawn_index = agent_trace["spawn_index"]
         positions = agent_trace["agent_visited"]
 
-        current_map = create_map(map_seed)
+        current_map = create_map(map_seed, map_data[str(map_index)])
 
         if len(positions) < 2:
             raise ValueError(f"Some of the paths are too short")
