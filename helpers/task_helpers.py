@@ -124,7 +124,7 @@ def _create_replay_tasks(seed):
 
         if len(positions) < 2:
             raise ValueError(f"Some of the paths are too short")
-        agent = partial(ReplayAgent, positions[0], positions[-1], plan=positions)
+        agent = partial(ReplayAgent, agent_trace["start_pos"], agent_trace["goal_pos"], plan=positions)
         task = TaskSpec(seed=map_seed, position_index=spawn_index, map_index=map_index, game_map=current_map,
                         agent=agent)
         tasks.append(task)
