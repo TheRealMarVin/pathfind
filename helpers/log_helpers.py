@@ -7,10 +7,7 @@ from datetime import datetime
 import config
 
 
-def export_runtime_data(agent_traces, map_traces):
-    name = config.CONFIG["experiment_name"]
-    output_folder = config.CONFIG["output_folder"]
-
+def export_runtime_data(name, output_folder,agent_traces, map_traces, export_config=True):
     timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     output_dir = os.path.join(output_folder, name + "-" + timestamp)
     os.makedirs(output_dir, exist_ok=True)
@@ -21,8 +18,9 @@ def export_runtime_data(agent_traces, map_traces):
     with open(os.path.join(output_dir, "map_output.json"), "w") as f:
         json.dump(map_traces, f, indent=4)
 
-    with open(os.path.join(output_dir, "used_config.yaml"), "w") as f:
-        yaml.dump(config.CONFIG, f, default_flow_style=False, sort_keys=False)
+    if export_config:
+        with open(os.path.join(output_dir, "used_config.yaml"), "w") as f:
+            yaml.dump(config.CONFIG, f, default_flow_style=False, sort_keys=False)
 
 def load_json_file(path):
     with open(path, "r") as f:

@@ -53,7 +53,9 @@ def run_experiments_parallel(config, max_workers=4):
         map_traces[result["map_index"]] = result["map_trace"]
         agent_traces.append(result["agent_trace"])
 
-    export_runtime_data(agent_traces, map_traces)
+    name = config["experiment_name"]
+    output_folder = config["output_folder"]
+    export_runtime_data(name, output_folder, agent_traces, map_traces)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Run experiments in headless mode without GUI.")

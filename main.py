@@ -61,7 +61,9 @@ def main(config):
                 running = False
 
     if record_trace:
-        export_runtime_data(agent_traces, map_traces)
+        name = config["experiment_name"]
+        output_folder = config["output_folder"]
+        export_runtime_data(name, output_folder, agent_traces, map_traces)
 
     pygame.quit()
 
