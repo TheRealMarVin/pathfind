@@ -22,6 +22,29 @@ class Map:
 
         self._generate_obstacles(random_generator, num_static, num_dynamic)
 
+    def reset(self):
+        for area in self.dynamic_areas:
+            area.reset()
+        self._rebuild_grid()
+
+    def update(self, agent_pos):
+        self._update_dynamics(agent_pos)
+        self._rebuild_grid()
+
+    def draw(self, surface, cell_size):
+        for y in range(self.height):
+            for x in range(self.width):
+                rect = pygame.Rect(x * cell_size, y * cell_size, cell_size, cell_size)
+                if self.grid[y, x] == 1:
+                    pygame.draw.rect(surface, self.color_obstacle, rect)
+                elif self.erosion[y, x]:
+                    pygame.draw.rect(surface, self.color_erosion, rect)
+
+        for x in range(self.width):
+            pygame.draw.line(surface, self.color_grid_line, (x * cell_size, 0), (x * cell_size, self.height * cell_size))
+        for y in range(self.height):
+            pygame.draw.line(surface, self.color_grid_line, (0, y * cell_size), (self.width * cell_size, y * cell_size))
+
     def _generate_obstacles(self, random_generator, num_static, num_dynamic):
         self.static_areas.clear()
         self.dynamic_areas.clear()
@@ -37,15 +60,6 @@ class Map:
             dx, dy = random_generator.choice([-1, 1]), random_generator.choice([-1, 1])
             self.dynamic_areas.append(ObstacleArea(shape, offset, move_pattern=(dx, dy)))
 
-        self._rebuild_grid()
-
-    def reset(self):
-        for area in self.dynamic_areas:
-            area.reset()
-        self._rebuild_grid()
-
-    def update(self, agent_pos):
-        self._update_dynamics(agent_pos)
         self._rebuild_grid()
 
     def _update_dynamics(self, agent_pos):
@@ -102,38 +116,6 @@ class Map:
                     self.grid[y, x] = 1
 
         self.erosion = binary_dilation(self.grid, iterations=1)
-
-    def find_free_position(self, min_dist=2, ignore=[]):
-        attempts = 0
-        max_attempts = 1000
-        while attempts < max_attempts:
-            x = np.random.randint(1, self.width - 1)
-            y = np.random.randint(1, self.height - 1)
-
-            if self.grid[y, x] == 0 and not self.erosion[y, x]:
-                too_close = False
-                for ox, oy in ignore:
-                    if abs(x - ox) + abs(y - oy) < min_dist:
-                        too_close = True
-                        break
-                if not too_close:
-                    return x, y
-            attempts += 1
-        raise RuntimeError("Failed to find free position after many attempts")
-
-    def draw(self, surface, cell_size):
-        for y in range(self.height):
-            for x in range(self.width):
-                rect = pygame.Rect(x * cell_size, y * cell_size, cell_size, cell_size)
-                if self.grid[y, x] == 1:
-                    pygame.draw.rect(surface, self.color_obstacle, rect)
-                elif self.erosion[y, x]:
-                    pygame.draw.rect(surface, self.color_erosion, rect)
-
-        for x in range(self.width):
-            pygame.draw.line(surface, self.color_grid_line, (x * cell_size, 0), (x * cell_size, self.height * cell_size))
-        for y in range(self.height):
-            pygame.draw.line(surface, self.color_grid_line, (0, y * cell_size), (self.width * cell_size, y * cell_size))
 
     def get_free_positions(self):
         free_positions = []

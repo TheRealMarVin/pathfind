@@ -12,11 +12,13 @@ class Game:
         self.color_agent = config.CONFIG["game"]["color_agent"]
         self.cell_size = config.CONFIG["map"]["cell_size"]
 
-        self.map = task.map
+        self.gameplay_map = task.gameplay_map
         self.agent = None
         self.last_update = 0
 
-        self.map_trace = {"seed": task.seed, "grid":self.map.grid.tolist(), "erosion":self.map.erosion.tolist()}
+        self.map_trace = {"seed": task.seed,
+                          "grid":self.gameplay_map.grid.tolist(),
+                          "erosion":self.gameplay_map.erosion.tolist()}
 
         self._spawn_agent()
 
@@ -28,8 +30,8 @@ class Game:
     def update(self, now):
         if now - self.last_update >= self.update_interval:
             self.last_update = now
-            self.map.update(self.agent.position)
-            self.agent.update(self.map)
+            self.gameplay_map.update(self.agent.position)
+            self.agent.update(self.gameplay_map)
 
     def is_task_completed(self):
         return self.agent.has_reached_goal()
@@ -43,7 +45,7 @@ class Game:
 
     def draw(self, surface):
         self.agent.draw(surface)
-        self.map.draw(surface, self.cell_size)
+        self.gameplay_map.draw(surface, self.cell_size)
 
         # Draw goal
         gx, gy = self.agent.goal

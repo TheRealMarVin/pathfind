@@ -6,5 +6,5 @@ class TaskSpec:
         self.seed = seed
         self.position_index = position_index
         self.map_index = map_index
-        self.map = copy.deepcopy(game_map)
+        self.gameplay_map = copy.deepcopy(game_map)
         self.agent = agent
