@@ -47,13 +47,7 @@ def create_map(seed):
     random_generator = random.Random(seed)
     np.random.seed(seed)
 
-    map = Map(
-        config.CONFIG["map"]["grid_width"],
-        config.CONFIG["map"]["grid_height"],
-        random_generator,
-        config.CONFIG["map"]["num_static_areas"],
-        config.CONFIG["map"]["num_dynamic_areas"]
-    )
+    map = Map(random_generator=random_generator, **config.CONFIG["map"])
 
     return map
 

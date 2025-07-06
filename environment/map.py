@@ -2,29 +2,41 @@ import numpy as np
 from scipy.ndimage import binary_dilation
 import pygame
 
-import config
 from environment.obstacle import ObstacleArea
 from helpers.map_helpers import random_shape
 
 
 class Map:
-    def __init__(self, width, height, random_generator, num_static=0, num_dynamic=0):
-        self.color_erosion = config.CONFIG["map"]["color_erosion"]
-        self.color_obstacle = config.CONFIG["map"]["color_obstacle"]
-        self.color_grid_line = config.CONFIG["map"]["color_grid_line"]
+    def __init__(
+        self,
+        random_generator,
+        grid_width=50,
+        grid_height=40,
+        erosion_size=1,
+        num_static_areas=20,
+        num_dynamic_areas=5,
+        color_obstacle=[0, 0, 0],
+        color_grid_line=[200, 200, 200],
+        color_erosion=[255, 155, 155],
+        **kwargs
+    ):
+        self.color_erosion = color_erosion
+        self.color_obstacle = color_obstacle
+        self.color_grid_line = color_grid_line
 
-        self.width = width
-        self.height = height
-        self.num_static = num_static
-        self.num_dynamic = num_dynamic
+        self.width = grid_width
+        self.height = grid_height
+        self.erosion_size = erosion_size
+        self.num_static = num_static_areas
+        self.num_dynamic = num_dynamic_areas
 
-        self.grid = np.zeros((height, width), dtype=int)
-        self.erosion = np.zeros((height, width), dtype=bool)
+        self.grid = np.zeros((self.height, self.width), dtype=int)
+        self.erosion = np.zeros((self.height, self.width), dtype=bool)
 
         self.static_areas = []
         self.dynamic_areas = []
 
-        self._generate_obstacles(random_generator, num_static, num_dynamic)
+        self._generate_obstacles(random_generator, self.num_static, self.num_dynamic)
 
     def reset(self):
         for area in self.dynamic_areas:
@@ -50,11 +62,16 @@ class Map:
             pygame.draw.line(surface, self.color_grid_line, (0, y * cell_size), (self.width * cell_size, y * cell_size))
 
     def get_trace(self):
-        map_trace = {"width": self.width,
-                     "height": self.height,
-                     "num_static": self.num_static,
-                     "num_dynamic": self.num_dynamic}
-
+        map_trace = {
+            "grid_width": self.width,
+            "grid_height": self.height,
+            "erosion_size": self.erosion_size,
+            "num_static_areas": self.num_static,
+            "num_dynamic_areas": self.num_dynamic,
+            "color_obstacle": self.color_obstacle,
+            "color_grid_line": self.color_grid_line,
+            "color_erosion": self.color_erosion,
+        }
         return map_trace
 
     def _generate_obstacles(self, random_generator, num_static, num_dynamic):
