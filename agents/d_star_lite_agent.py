@@ -8,6 +8,10 @@ class DStarLiteAgent(Agent):
     def display_name(self):
         return "d star"
 
+    @property
+    def type_name(self):
+        return "dstar"
+
     def __init__(self, start, goal, lookahead_steps=5, verbose=False, epsilon: float = 1e-4):
         super().__init__(start, goal)
         self.lookahead_steps = lookahead_steps

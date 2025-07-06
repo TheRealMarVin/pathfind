@@ -6,6 +6,10 @@ class ReplayAgent(Agent):
     def display_name(self):
         return "replay"
 
+    @property
+    def type_name(self):
+        return "replay"
+
     def __init__(self, start, goal, plan):
         super().__init__(start, goal)
         self.planned = True

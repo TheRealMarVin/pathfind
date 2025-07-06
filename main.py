@@ -26,6 +26,7 @@ def main(config):
 
     fps = config["fps"]
     background_color = config["color_background"]
+    record_trace = config["record_trace"]
 
     running = True
     while running:
@@ -45,10 +46,12 @@ def main(config):
         pygame.display.flip()
         clock.tick(fps)
 
-        if game.is_task_completed():
-            agent_trace, map_trace = game.get_trace()
-            map_traces[tasks[index].map_index] = map_trace
-            agent_traces.append(agent_trace)
+        if  game.is_task_completed():
+            if record_trace:
+                agent_trace, map_trace = game.get_trace()
+                map_traces[tasks[index].map_index] = map_trace
+                agent_traces.append(agent_trace)
+
             index += 1
             if index < len(tasks):
                 task = tasks[index]
@@ -57,7 +60,8 @@ def main(config):
             else:
                 running = False
 
-    export_runtime_data(agent_traces, map_traces)
+    if record_trace:
+        export_runtime_data(agent_traces, map_traces)
 
     pygame.quit()
 

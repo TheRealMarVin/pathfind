@@ -1,7 +1,8 @@
 experiment_name: default_replay_config
 seed: 42
 runtime_type: Replay
-replay_folder: ./output/default_config-2025-06-19_21-08-15.
+replay_folder: ./output/default_config-2025-07-05_20-09-53
+record_trace: False
 
 map:
   num_dynamic_areas: 0

@@ -16,8 +16,7 @@ class Game:
         self.agent = None
         self.last_update = 0
 
-        self.map_trace = {"seed": task.seed, "grid":self.map.grid.tolist(), "erosion":self.map.erosion.tolist(),
-                          "agent_type": task.agent}
+        self.map_trace = {"seed": task.seed, "grid":self.map.grid.tolist(), "erosion":self.map.erosion.tolist()}
 
         self._spawn_agent()
 
@@ -36,7 +35,10 @@ class Game:
         return self.agent.has_reached_goal()
 
     def get_trace(self):
-        agent_trace = {"agent_type": self.task.agent, "spawn_index": self.task.position_index, "map_index": self.task.map_index, "agent_visited": copy.deepcopy(self.agent.visited), "agent_explored": copy.deepcopy(list(self.agent.explored))}
+        agent_trace = {"agent_type": self.agent.type_name, "spawn_index": self.task.position_index,
+                       "start_pos": tuple(self.agent.start), "goal_pos": tuple(self.agent.goal),
+                       "map_index": self.task.map_index, "agent_visited": copy.deepcopy(self.agent.visited),
+                       "agent_explored": copy.deepcopy(list(self.agent.explored))}
         return agent_trace, self.map_trace
 
     def draw(self, surface):

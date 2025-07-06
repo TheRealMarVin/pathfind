@@ -26,7 +26,7 @@ runtime_type:
 agent_types:
   description: List of agents to run and tests
   required: false
-  default: ["dstar", "astar"]
+  default: ["dstar", "astar", "replay"]
   type: list(str)
 maps_to_test:
   description: Number of map to test
@@ -43,6 +43,11 @@ replay_folder:
   required: false
   default: None
   type: str | None
+record_trace:
+  description: Set to true if you want to record the traces.
+  required: false
+  default: True
+  type: bool
 
 game:
   $ref: ./game.yaml

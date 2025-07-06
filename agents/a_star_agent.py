@@ -9,6 +9,10 @@ class AStarAgent(Agent):
     def display_name(self):
         return "a star"
 
+    @property
+    def type_name(self):
+        return "astar"
+
     def __init__(self, start, goal, lookahead_steps=5):
         super().__init__(start, goal)
         self.planned = False

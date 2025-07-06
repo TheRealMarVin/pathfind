@@ -7,6 +7,6 @@ def main(path_1, path_2):
 
 
 if __name__ == "__main__":
-    folder_1 = "outputs/single_map_config_no_obstacles-2025-06-15_19-35-46"
-    folder_2 = "outputs/single_map_config_no_obstacles-2025-06-15_20-02-02"
+    folder_1 = "output/single_map_config_no_obstacles-2025-06-15_19-35-46"
+    folder_2 = "output/single_map_config_no_obstacles-2025-06-15_20-02-02"
     main(folder_1, folder_2)
