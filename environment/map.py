@@ -12,8 +12,12 @@ class Map:
         self.color_erosion = config.CONFIG["map"]["color_erosion"]
         self.color_obstacle = config.CONFIG["map"]["color_obstacle"]
         self.color_grid_line = config.CONFIG["map"]["color_grid_line"]
+
         self.width = width
         self.height = height
+        self.num_static = num_static
+        self.num_dynamic = num_dynamic
+
         self.grid = np.zeros((height, width), dtype=int)
         self.erosion = np.zeros((height, width), dtype=bool)
 
@@ -44,6 +48,14 @@ class Map:
             pygame.draw.line(surface, self.color_grid_line, (x * cell_size, 0), (x * cell_size, self.height * cell_size))
         for y in range(self.height):
             pygame.draw.line(surface, self.color_grid_line, (0, y * cell_size), (self.width * cell_size, y * cell_size))
+
+    def get_trace(self):
+        map_trace = {"width": self.width,
+                     "height": self.height,
+                     "num_static": self.num_static,
+                     "num_dynamic": self.num_dynamic}
+
+        return map_trace
 
     def _generate_obstacles(self, random_generator, num_static, num_dynamic):
         self.static_areas.clear()

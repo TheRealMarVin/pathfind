@@ -16,9 +16,10 @@ class Game:
         self.agent = None
         self.last_update = 0
 
-        self.map_trace = {"seed": task.seed,
-                          "grid":self.gameplay_map.grid.tolist(),
-                          "erosion":self.gameplay_map.erosion.tolist()}
+        self.map_trace = self.gameplay_map.get_trace()
+        self.map_trace["seed"] = task.seed
+        self.map_trace["grid"] = self.gameplay_map.grid.tolist()
+        self.map_trace["erosion"] = self.gameplay_map.erosion.tolist()
 
         self._spawn_agent()
 
