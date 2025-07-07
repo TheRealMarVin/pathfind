@@ -20,3 +20,9 @@ class ReplayAgent(Agent):
         if self.plan:
             self.position = self.plan.pop(0)
             self.visited.append(self.position)
+
+    def has_reached_goal(self):
+        if self.plan:
+            return False
+
+        return True
