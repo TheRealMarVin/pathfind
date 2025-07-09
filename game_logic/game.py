@@ -2,6 +2,8 @@ import copy
 import config
 import pygame
 
+from helpers.path_helper import compute_path_length
+
 
 class Game:
     def __init__(self, task):
@@ -42,7 +44,11 @@ class Game:
                        "start_pos": tuple(self.agent.start), "goal_pos": tuple(self.agent.goal),
                        "map_index": self.task.map_index, "agent_visited": copy.deepcopy(self.agent.visited),
                        "agent_explored": copy.deepcopy(list(self.agent.explored)),
-                       "planning_time": self.agent.get_planning_time()}
+                       "planning_time": self.agent.get_planning_time(),
+                       "path_length": compute_path_length(self.agent.visited)}
+        print("\t\tpath length" ,compute_path_length(self.agent.visited))
+        print("\t\tvisited path nodes count", len(self.agent.visited))
+        print("\t\texplored path nodes count", len(self.agent.explored))
         return agent_trace, self.map_trace
 
     def draw(self, surface):
