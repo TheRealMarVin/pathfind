@@ -30,7 +30,7 @@ class DStarLiteAgent(Agent):
 
         if not self.initialized:
             self._initialize(game_map)
-            self._compute_shortest_path(game_map)
+            self.plan_path(game_map)
             self._extract_path(game_map)
 
         elif self._should_replan(game_map):
@@ -44,7 +44,7 @@ class DStarLiteAgent(Agent):
             for pos in set(affected):
                 self._update_vertex(pos, game_map)
 
-            self._compute_shortest_path(game_map)
+            self.plan_path(game_map)
             self._extract_path(game_map)
 
         if not self.plan:
@@ -118,7 +118,7 @@ class DStarLiteAgent(Agent):
         if self.g.get(node, float("inf")) != self.rhs.get(node, float("inf")):
             heapq.heappush(self.update_queue, (self._calculate_key(node), node))
 
-    def _compute_shortest_path(self, game_map, max_expansions=50000):
+    def _plan_path(self, game_map, max_expansions=50000):
         expanded = 0
         while self.update_queue:
             k_start = self._calculate_key(self.position)

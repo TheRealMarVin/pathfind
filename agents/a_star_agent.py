@@ -1,5 +1,6 @@
 import heapq
 import math
+from typing import List, Tuple
 
 from agents.agent import Agent
 
@@ -20,7 +21,7 @@ class AStarAgent(Agent):
 
     def update(self, game_map):
         if not self.planned or self._should_replan(game_map):
-            self._plan_path(game_map)
+            self.plan_path(game_map)
             self.planned = True
 
         if self.plan:
@@ -46,6 +47,7 @@ class AStarAgent(Agent):
         start, goal = self.position, self.goal
         nodes_to_explore = [(self._heuristic(start, goal), 0.0, start, [])]
         visited = set()
+        self.explored.clear()  # Clear explored set for visualization
 
         while nodes_to_explore:
             total_cost, path_cost, current, path = heapq.heappop(nodes_to_explore)
@@ -68,11 +70,21 @@ class AStarAgent(Agent):
 
         self.plan = []
 
-    def _should_replan(self, game_map):
-        """Check next few steps for new obstacles."""
+    def _should_replan(self, game_map) -> bool:
+        """
+        Check if replanning is needed by looking ahead in the current plan.
+        
+        Returns:
+            bool: True if replanning is needed, False otherwise
+        """
+        if not self.plan:
+            return True
+            
         grid = game_map.grid
         for pos in self.plan[:self.lookahead_steps]:
             x, y = pos
-            if grid[y, x] != 0:
+            if not (0 <= y < grid.shape[0] and 0 <= x < grid.shape[1]):
+                return True
+            if grid[y, x] != 0 or game_map.erosion[y, x]:
                 return True
         return False

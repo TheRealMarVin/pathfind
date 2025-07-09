@@ -1,6 +1,7 @@
 import config
+import numpy as np
 import pygame
-
+import time
 
 class Agent:
     def __init__(self, start, goal):
@@ -11,6 +12,7 @@ class Agent:
         self.plan = []  # list of (x, y) steps
         self.explored = set()  # for planning visualization
         self.visited = []  # for movement visualization
+        self._planning_times = []
 
     def update(self, game_map):
         """
@@ -18,6 +20,7 @@ class Agent:
         Should be overridden by subclasses.
         """
         raise NotImplementedError()
+
 
     def has_reached_goal(self):
         if self.position == self.goal:
@@ -34,3 +37,15 @@ class Agent:
         for (x, y) in self.visited:
             rect = pygame.Rect(x * self.cell_size, y * self.cell_size, self.cell_size, self.cell_size)
             pygame.draw.rect(surface, (144, 238, 144), rect)  # light green = visited
+
+    def plan_path(self, game_map):
+        start_time = time.perf_counter()
+        self._plan_path(game_map)
+        planning_time = time.perf_counter() - start_time
+        self._planning_times.append(planning_time)
+
+    def _plan_path(self, game_map):
+        raise NotImplementedError()
+
+    def get_planning_time(self):
+        return np.array(self._planning_times).sum()

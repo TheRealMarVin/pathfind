@@ -41,7 +41,8 @@ class Game:
         agent_trace = {"agent_type": self.agent.type_name, "spawn_index": self.task.position_index,
                        "start_pos": tuple(self.agent.start), "goal_pos": tuple(self.agent.goal),
                        "map_index": self.task.map_index, "agent_visited": copy.deepcopy(self.agent.visited),
-                       "agent_explored": copy.deepcopy(list(self.agent.explored))}
+                       "agent_explored": copy.deepcopy(list(self.agent.explored)),
+                       "planning_time": self.agent.get_planning_time()}
         return agent_trace, self.map_trace
 
     def draw(self, surface):
