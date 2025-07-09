@@ -26,7 +26,7 @@ runtime_type:
 agent_types:
   description: List of agents to run and tests
   required: false
-  default: ["dstar", "astar", "replay"]
+  default: ["dstar", "astar", "replay", "dijkstra"]
   type: list(str)
 maps_to_test:
   description: Number of map to test
