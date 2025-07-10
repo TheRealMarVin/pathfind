@@ -19,18 +19,18 @@ def compute_path_length(path):
 
     return total
 
-def is_touching(p1, p2):
-    if type(p1) is str or type(p2) is str:
+def is_touching(position_1, position_2):
+    if type(position_1) is str or type(position_2) is str:
         return False
 
-    dx = abs(p1[0] - p2[0])
-    dy = abs(p1[1] - p2[1])
+    dx = abs(position_1[0] - position_2[0])
+    dy = abs(position_1[1] - position_2[1])
 
     return not(dx > 1 or dy > 1)
 
-def count_invalid_moves(trace):
+def count_invalid_moves(path):
     invalid_count = 0
-    for i in range(len(trace) - 1):
-        if not is_touching(trace[i], trace[i + 1]):
+    for i in range(len(path) - 1):
+        if not is_touching(path[i], path[i + 1]):
             invalid_count += 1
     return invalid_count
