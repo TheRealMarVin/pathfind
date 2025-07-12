@@ -11,6 +11,7 @@ import config
 from agents.a_star_agent import AStarAgent
 from agents.d_star_lite_agent import DStarLiteAgent
 from agents.dijkstra_agent import DijkstraAgent
+from agents.monte_carlo_agent import MonteCarloAgent
 from agents.replay_agent import ReplayAgent
 from environment.map import Map
 from game_logic.task_spec import TaskSpec
@@ -74,6 +75,8 @@ def _get_generation_agent(agent_type, positions):
         agent = partial(DStarLiteAgent, start_pos, goal_pos)
     elif agent_type == "dijkstra":
         agent = partial(DijkstraAgent, start_pos, goal_pos)
+    elif agent_type == "monte_carlo":
+        agent = partial(MonteCarloAgent, start_pos, goal_pos)
     else:
         raise ValueError(f"Unknown agent type: {agent_type}")
 
