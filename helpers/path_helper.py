@@ -8,13 +8,20 @@ def compute_path_length(path):
         path: A list of (x, y) positions including the start.
 
     Returns:
-        The total path length as a float.
+        The total path length as a float or -1 if path is invalid.
     """
     total = 0.0
 
     for i in range(1, len(path)):
-        dx = path[i][0] - path[i - 1][0]
-        dy = path[i][1] - path[i - 1][1]
+        position_1 = path[i]
+        if (type(position_1) is tuple or type(position_1) is list) and len(position_1) == 2:
+            return -1 # path is invalid
+        position_2 = path[i - 1]
+        if (type(position_2) is tuple or type(position_2) is list) and len(position_2) == 2:
+            return -1 # path is invalid
+
+        dx = position_1[0] - position_2[0]
+        dy = position_1[1] - position_2[1]
         total += math.hypot(dx, dy)
 
     return total
