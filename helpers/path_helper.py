@@ -14,10 +14,10 @@ def compute_path_length(path):
 
     for i in range(1, len(path)):
         position_1 = path[i]
-        if (type(position_1) is tuple or type(position_1) is list) and len(position_1) == 2:
+        if (type(position_1) is tuple or type(position_1) is list) and len(position_1) != 2:
             return -1 # path is invalid
         position_2 = path[i - 1]
-        if (type(position_2) is tuple or type(position_2) is list) and len(position_2) == 2:
+        if (type(position_2) is tuple or type(position_2) is list) and len(position_2) != 2:
             return -1 # path is invalid
 
         dx = position_1[0] - position_2[0]
