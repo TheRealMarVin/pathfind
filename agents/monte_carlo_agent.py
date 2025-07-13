@@ -36,7 +36,7 @@ class MonteCarloAgent(Agent):
             self.visited.append(self.position)
 
     def has_reached_goal(self):
-        return not self.plan
+        return self.planned and not self.plan
 
     def _is_valid_move(self, x, y, game_map, visited):
         # Check if position is within bounds
