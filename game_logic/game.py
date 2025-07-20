@@ -10,6 +10,7 @@ class Game:
         self.task = task
 
         self.update_interval = config.CONFIG["game"]["update_interval"]
+        self.color_start = config.CONFIG["game"]["color_start"]
         self.color_goal = config.CONFIG["game"]["color_goal"]
         self.color_agent = config.CONFIG["game"]["color_agent"]
         self.cell_size = config.CONFIG["map"]["cell_size"]
@@ -69,4 +70,12 @@ class Game:
             surface,
             self.color_agent,
             pygame.Rect(ax * self.cell_size, ay * self.cell_size, self.cell_size, self.cell_size)
+        )
+
+        # Draw start
+        gx, gy = self.agent.start
+        pygame.draw.rect(
+            surface,
+            self.color_start,
+            pygame.Rect(gx * self.cell_size, gy * self.cell_size, self.cell_size, self.cell_size)
         )
