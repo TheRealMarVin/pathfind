@@ -13,7 +13,6 @@ from helpers.task_helpers import create_tasks
 def run_task(task, fps):
     game = Game(task)
     interval = 1.0 / fps
-    start_time = time.time()
 
     while not game.is_task_completed():
         game.update(time.time() * 1000)
