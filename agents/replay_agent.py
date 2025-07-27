@@ -13,6 +13,7 @@ class ReplayAgent(Agent):
     def __init__(self, trace):
         super().__init__(trace["start_pos"], trace["goal_pos"])
 
+        self.trace = trace
         self.planned = True
         self.plan = trace["agent_visited"]
         self.explored = set([tuple(pos) for pos in self.plan])
