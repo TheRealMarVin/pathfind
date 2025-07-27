@@ -38,13 +38,12 @@ def main(config):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_x:
                     game = Game(game.task)
-                elif event.key == pygame.K_n:
-                    game.reset_new_map()
                 elif event.key == pygame.K_p:
-                    paused = True
-                elif event.key == pygame.K_r:
-                    paused = False
-                    previous_time = pygame.time.get_ticks()
+                    if paused:
+                        paused = False
+                        previous_time = pygame.time.get_ticks()
+                    else:
+                        paused = True
 
         delta_time = 0
         if not paused:
