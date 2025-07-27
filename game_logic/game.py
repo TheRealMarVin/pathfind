@@ -17,7 +17,7 @@ class Game:
 
         self.gameplay_map = task.gameplay_map
         self.agent = None
-        self.last_update = 0
+        self.time_since_last_update = 0
 
         self.map_trace = self.gameplay_map.get_trace()
         self.map_trace["seed"] = task.seed
@@ -31,9 +31,10 @@ class Game:
 
         print(f"Agent: {self.agent.display_name}, Map #{self.task.map_index}, Spawn #{self.task.position_index}\n  Start: {self.agent.start} -> Goal: {self.agent.goal}\n")
 
-    def update(self, now):
-        if now - self.last_update >= self.update_interval:
-            self.last_update = now
+    def update(self, delta_time):
+        self.time_since_last_update += delta_time
+        if self.time_since_last_update >= self.update_interval:
+            self.time_since_last_update = 0
             self.gameplay_map.update(self.agent.position)
             self.agent.update(self.gameplay_map)
 

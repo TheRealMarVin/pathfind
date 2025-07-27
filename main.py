@@ -29,6 +29,8 @@ def main(config):
     record_trace = config["record_trace"]
 
     running = True
+    paused = False
+    previous_time = pygame.time.get_ticks()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -38,9 +40,16 @@ def main(config):
                     game.reset_same_map()
                 elif event.key == pygame.K_n:
                     game.reset_new_map()
+                elif event.key == pygame.K_p:
+                    paused = True
+                elif event.key == pygame.K_r:
+                    paused = False
 
         now = pygame.time.get_ticks()
-        game.update(now)
+        delta_time = now - previous_time
+        previous_time = now
+
+        game.update(delta_time)
         screen.fill(background_color)
         game.draw(screen)
         pygame.display.flip()
