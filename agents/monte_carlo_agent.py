@@ -1,5 +1,4 @@
 import random
-import numpy as np
 from agents.agent import Agent
 from dataclasses import dataclass
 
@@ -20,8 +19,9 @@ class MonteCarloAgent(Agent):
     def type_name(self):
         return "monte_carlo"
 
-    def __init__(self, start, goal, path_length=100, direction_bias=0.8):
+    def __init__(self, start, goal, path_length=100, direction_bias=0.8, seed=42):
         super().__init__(start, goal)
+        self.random_generator = random.Random(seed)
         self.max_steps = path_length
         self.direction_bias = direction_bias  # Probability to continue in same direction
         self.planned = False
@@ -76,11 +76,11 @@ class MonteCarloAgent(Agent):
                 break  # No valid moves available
             
             # If we have a last direction and random check passes, try to continue in that direction
-            if last_direction and random.random() < self.direction_bias:
+            if last_direction and self.random_generator.random() < self.direction_bias:
                 # Find moves in the same direction
                 same_dir_moves = [m for m in moves if m[2] == last_direction]
                 if same_dir_moves:
-                    chosen = random.choice(same_dir_moves)
+                    chosen = self.random_generator.choice(same_dir_moves)
                     current = (chosen[0], chosen[1])
                     self.plan.append(current)
                     visited.add(current)
@@ -88,7 +88,7 @@ class MonteCarloAgent(Agent):
                     continue
             
             # Either no direction bias or couldn't continue in same direction
-            chosen = random.choice(moves)
+            chosen = self.random_generator.choice(moves)
             current = (chosen[0], chosen[1])
             last_direction = chosen[2]
             self.plan.append(current)

@@ -65,7 +65,7 @@ def create_positions(map, spawns_per_map):
     start_goal_pairs = find_start_and_goal_positions(spawns_per_map, free_positions)
     return start_goal_pairs
 
-def _get_generation_agent(agent_type, positions):
+def _get_generation_agent(agent_type, positions, seed):
     start_pos = positions["start"]
     goal_pos = positions["goal"]
 
@@ -76,7 +76,7 @@ def _get_generation_agent(agent_type, positions):
     elif agent_type == "dijkstra":
         agent = partial(DijkstraAgent, start_pos, goal_pos)
     elif agent_type == "monte_carlo":
-        agent = partial(MonteCarloAgent, start_pos, goal_pos)
+        agent = partial(MonteCarloAgent, start_pos, goal_pos, seed)
     else:
         raise ValueError(f"Unknown agent type: {agent_type}")
 
@@ -94,7 +94,7 @@ def _create_generate_tasks(seed):
         start_goal_pairs = create_positions(current_map, spawns_per_map)
         for key, position_pairs in start_goal_pairs.items():
             for agent_type in agent_types:
-                agent = _get_generation_agent(agent_type, position_pairs)
+                agent = _get_generation_agent(agent_type, position_pairs, seed)
 
                 task = TaskSpec(seed=map_seed, position_index=key, map_index=map_index, game_map=current_map,
                                 agent=agent)
