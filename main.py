@@ -44,6 +44,10 @@ def main(config):
                     paused = True
                 elif event.key == pygame.K_r:
                     paused = False
+                    previous_time = pygame.time.get_ticks()
+
+        if paused:
+            continue
 
         now = pygame.time.get_ticks()
         delta_time = now - previous_time
