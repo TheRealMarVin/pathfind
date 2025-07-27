@@ -3,6 +3,9 @@ import numpy as np
 import pygame
 import time
 
+from helpers.path_helper import compute_path_length
+
+
 class Agent:
     def __init__(self, start, goal):
         self.cell_size = config.CONFIG["map"]["cell_size"]
@@ -13,6 +16,8 @@ class Agent:
         self.explored = set()  # for planning visualization
         self.visited = []  # for movement visualization
         self._planning_times = []
+
+        self.state = {"agent_type": self.type_name, "start_pos": tuple(start), "goal_pos": tuple(goal)}
 
     def update(self, game_map):
         """
@@ -47,5 +52,8 @@ class Agent:
     def _plan_path(self, game_map):
         raise NotImplementedError()
 
-    def get_planning_time(self):
-        return np.array(self._planning_times).sum()
+    def update_and_get_state(self):
+        self.state["planning_time"] = np.array(self._planning_times).sum()
+        self.state["path_length"] = compute_path_length(self.visited)
+
+        return self.state

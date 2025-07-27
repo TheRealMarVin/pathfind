@@ -2,8 +2,6 @@ import copy
 import config
 import pygame
 
-from helpers.path_helper import compute_path_length
-
 
 class Game:
     def __init__(self, task):
@@ -29,7 +27,7 @@ class Game:
     def _spawn_agent(self):
         self.agent = self.task.agent()
 
-        print(f"Agent: {self.agent.display_name}, Map #{self.task.map_index}, Spawn #{self.task.position_index}\n  Start: {self.agent.start} -> Goal: {self.agent.goal}\n")
+        print(f"Agent: {self.agent.display_name}, Map #{self.task.map_index}, Spawn #{self.task.position_index}\n  Start: {self.agent.start} -> Goal: {self.agent.goal}")
 
     def update(self, delta_time):
         self.time_since_last_update += delta_time
@@ -42,13 +40,13 @@ class Game:
         return self.agent.has_reached_goal()
 
     def get_trace(self):
-        agent_trace = {"agent_type": self.agent.type_name, "spawn_index": self.task.position_index,
-                       "start_pos": tuple(self.agent.start), "goal_pos": tuple(self.agent.goal),
+        agent_trace = {"spawn_index": self.task.position_index,
                        "map_index": self.task.map_index, "agent_visited": copy.deepcopy(self.agent.visited),
-                       "agent_explored": copy.deepcopy(list(self.agent.explored)),
-                       "planning_time": self.agent.get_planning_time(),
-                       "path_length": compute_path_length(self.agent.visited)}
-        print("\t\tpath length" ,compute_path_length(self.agent.visited))
+                       "agent_explored": copy.deepcopy(list(self.agent.explored))}
+        agent_state = self.agent.update_and_get_state()
+        agent_trace.update(agent_state)
+
+        print("\t\tpath length" ,agent_state["path_length"])
         print("\t\tvisited path nodes count", len(self.agent.visited))
         print("\t\texplored path nodes count", len(self.agent.explored))
         return agent_trace, self.map_trace
