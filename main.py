@@ -32,6 +32,8 @@ def main(config):
     paused = False
     previous_time = pygame.time.get_ticks()
     while running:
+        delta_time = 0
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -44,8 +46,10 @@ def main(config):
                         previous_time = pygame.time.get_ticks()
                     else:
                         paused = True
+                elif event.key == pygame.K_s:
+                    if paused:
+                        delta_time = game.update_interval
 
-        delta_time = 0
         if not paused:
             now = pygame.time.get_ticks()
             delta_time = now - previous_time
