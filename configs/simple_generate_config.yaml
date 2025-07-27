@@ -1,6 +1,7 @@
 experiment_name: default_config
 seed: 42
 runtime_type: Generate
+display_debug_values: [start_pos, goal_pos]
 
 agent_types: [astar, dstar, dijkstra]
 maps_to_test: 2
