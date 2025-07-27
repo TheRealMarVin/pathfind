@@ -23,6 +23,12 @@ runtime_type:
   values: [Generate, Replay]
   type: enum
 
+display_debug_values:
+  description: The values that we want to display in the debug window.
+  required: False
+  default: []
+  type: list(str)
+
 agent_types:
   description: List of agents to run and tests
   required: false

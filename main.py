@@ -2,6 +2,7 @@ import argparse
 import pygame
 
 from config import load_config
+from debug.debug_window import DebugWindow, debug_queue, toggle_debug_window
 from game_logic.game import Game
 from helpers.log_helpers import export_runtime_data
 from helpers.task_helpers import create_tasks
@@ -28,6 +29,9 @@ def main(config):
     background_color = config["color_background"]
     record_trace = config["record_trace"]
 
+    # debug_window = DebugWindow()
+
+    debug_enabled = False
     running = True
     paused = False
     previous_time = pygame.time.get_ticks()
@@ -40,6 +44,9 @@ def main(config):
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_x:
                     game = Game(game.task)
+                elif event.key == pygame.K_d:
+                    toggle_debug_window()
+                    debug_enabled = not debug_enabled
                 elif event.key == pygame.K_p:
                     if paused:
                         paused = False
@@ -49,7 +56,8 @@ def main(config):
                 elif event.key == pygame.K_s:
                     if paused:
                         delta_time = game.update_interval
-
+        if debug_enabled:
+            debug_queue.put(game.agent.update_and_get_state())
         if not paused:
             now = pygame.time.get_ticks()
             delta_time = now - previous_time
