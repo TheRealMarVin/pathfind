@@ -37,7 +37,7 @@ def main(config):
                 running = False
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_x:
-                    game.reset_same_map()
+                    game = Game(game.task)
                 elif event.key == pygame.K_n:
                     game.reset_new_map()
                 elif event.key == pygame.K_p:
@@ -46,12 +46,11 @@ def main(config):
                     paused = False
                     previous_time = pygame.time.get_ticks()
 
-        if paused:
-            continue
-
-        now = pygame.time.get_ticks()
-        delta_time = now - previous_time
-        previous_time = now
+        delta_time = 0
+        if not paused:
+            now = pygame.time.get_ticks()
+            delta_time = now - previous_time
+            previous_time = now
 
         game.update(delta_time)
         screen.fill(background_color)

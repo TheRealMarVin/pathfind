@@ -7,7 +7,7 @@ from helpers.path_helper import compute_path_length
 
 class Game:
     def __init__(self, task):
-        self.task = task
+        self.task = copy.deepcopy(task)
 
         self.update_interval = config.CONFIG["game"]["update_interval"]
         self.color_start = config.CONFIG["game"]["color_start"]
