@@ -10,11 +10,12 @@ class ReplayAgent(Agent):
     def type_name(self):
         return "replay"
 
-    def __init__(self, start, goal, plan):
-        super().__init__(start, goal)
+    def __init__(self, trace):
+        super().__init__(trace["start_pos"], trace["goal_pos"])
+
         self.planned = True
-        self.plan = plan
-        self.explored = set([tuple(pos) for pos in plan])
+        self.plan = trace["agent_visited"]
+        self.explored = set([tuple(pos) for pos in self.plan])
 
     def update(self, game_map):
         if self.plan:
