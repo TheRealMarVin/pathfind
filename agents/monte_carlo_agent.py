@@ -2,6 +2,9 @@ import random
 from agents.agent import Agent
 from dataclasses import dataclass
 
+from agents.agent_factory import factory
+
+
 @dataclass
 class Direction:
     dx: int
@@ -10,6 +13,7 @@ class Direction:
     def __hash__(self):
         return hash((self.dx, self.dy))
 
+@factory.register_decorator("monte_carlo")
 class MonteCarloAgent(Agent):
     @property
     def display_name(self):

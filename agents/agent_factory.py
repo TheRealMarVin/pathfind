@@ -1,3 +1,4 @@
+from functools import partial
 from typing import Callable, Dict, Any
 import inspect
 
@@ -28,6 +29,6 @@ class AgentFactory:
         sig = inspect.signature(ctor)
         accepted = {k: v for k, v in kwargs.items() if k in sig.parameters}
 
-        return ctor(**accepted)
+        return partial(ctor, **accepted)
 
 factory = AgentFactory()

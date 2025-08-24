@@ -3,8 +3,10 @@ import math
 from typing import List, Tuple
 
 from agents.agent import Agent
+from agents.agent_factory import factory
 
 
+@factory.register_decorator("astar")
 class AStarAgent(Agent):
     @property
     def display_name(self):

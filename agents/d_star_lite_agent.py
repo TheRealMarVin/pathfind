@@ -1,8 +1,10 @@
 import heapq
 import numpy as np
 from agents.agent import Agent
+from agents.agent_factory import factory
 
 
+@factory.register_decorator("dstar")
 class DStarLiteAgent(Agent):
     @property
     def display_name(self):

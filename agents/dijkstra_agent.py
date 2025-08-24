@@ -3,8 +3,10 @@ import math
 from typing import List, Tuple, Dict, Set
 
 from agents.agent import Agent
+from agents.agent_factory import factory
 
 
+@factory.register_decorator("dijkstra")
 class DijkstraAgent(Agent):
     @property
     def display_name(self):

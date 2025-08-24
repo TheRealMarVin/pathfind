@@ -9,6 +9,7 @@ from tqdm import tqdm
 
 import config
 from agents.a_star_agent import AStarAgent
+from agents.agent_factory import factory
 from agents.d_star_lite_agent import DStarLiteAgent
 from agents.dijkstra_agent import DijkstraAgent
 from agents.monte_carlo_agent import MonteCarloAgent
@@ -68,19 +69,21 @@ def create_positions(map, spawns_per_map):
 def _get_generation_agent(agent_type, positions, seed):
     start_pos = positions["start"]
     goal_pos = positions["goal"]
+    params = {"start": positions["start"], "goal": positions["goal"], "seed":seed}
 
-    if agent_type == "astar":
-        agent = partial(AStarAgent,start_pos, goal_pos)
-    elif agent_type == "dstar":
-        agent = partial(DStarLiteAgent, start_pos, goal_pos)
-    elif agent_type == "dijkstra":
-        agent = partial(DijkstraAgent, start_pos, goal_pos)
-    elif agent_type == "monte_carlo":
-        agent = partial(MonteCarloAgent, start_pos, goal_pos, seed)
-    else:
-        raise ValueError(f"Unknown agent type: {agent_type}")
-
-    return agent
+    return factory.create(agent_type, **params)
+    # if agent_type == "astar":
+    #     agent = partial(AStarAgent,start_pos, goal_pos)
+    # elif agent_type == "dstar":
+    #     agent = partial(DStarLiteAgent, start_pos, goal_pos)
+    # elif agent_type == "dijkstra":
+    #     agent = partial(DijkstraAgent, start_pos, goal_pos)
+    # elif agent_type == "monte_carlo":
+    #     agent = partial(MonteCarloAgent, start_pos, goal_pos, seed)
+    # else:
+    #     raise ValueError(f"Unknown agent type: {agent_type}")
+    #
+    # return agent
 
 def _create_generate_tasks(seed):
     maps_to_test = config.CONFIG["maps_to_test"]

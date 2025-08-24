@@ -1,6 +1,8 @@
 from agents.agent import Agent
+from agents.agent_factory import factory
 
 
+@factory.register_decorator("replay")
 class ReplayAgent(Agent):
     @property
     def display_name(self):
