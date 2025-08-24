@@ -2,7 +2,7 @@ import argparse
 import pygame
 
 from config import load_config
-from debug.debug_window import DebugWindow, debug_queue, toggle_debug_window
+from debug.debug_window import debug_queue, toggle_debug_window
 from game_logic.game import Game
 from helpers.log_helpers import export_runtime_data
 from helpers.task_helpers import create_tasks
@@ -28,8 +28,6 @@ def main(config):
     fps = config["fps"]
     background_color = config["color_background"]
     record_trace = config["record_trace"]
-
-    # debug_window = DebugWindow()
 
     debug_enabled = False
     running = True
