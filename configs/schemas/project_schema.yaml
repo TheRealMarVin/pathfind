@@ -32,23 +32,27 @@ display_debug_values:
 agent_types:
   description: List of agents to run and tests
   required: false
-  default: ["dstar", "astar", "replay", "dijkstra", "monte_carlo"]
+  default: ["dstar", "astar", "replay", "dijkstra", "diverse_dijkstra", "monte_carlo"]
   type: list(str)
+
 maps_to_test:
   description: Number of map to test
   required: false
   default: 10
   type: int
+
 spawns_per_map:
   description: Number of time each agent will spawn for every map.
   required: false
   default: 2
   type: int
+
 replay_folder:
   description: The folder to use to load replays
   required: false
   default: None
   type: str | None
+
 record_trace:
   description: Set to true if you want to record the traces.
   required: false

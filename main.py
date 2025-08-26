@@ -9,8 +9,11 @@ from helpers.task_helpers import create_tasks
 
 
 def main(config):
+    agent_traces = []
+    map_traces = {}
+
     index = 0
-    tasks = create_tasks()
+    tasks = create_tasks(agent_traces)
     if len(tasks) == 0:
         return
 
@@ -18,9 +21,6 @@ def main(config):
     screen = pygame.display.set_mode((config["map"]["grid_width"] * config["map"]["cell_size"], config["map"]["grid_height"] * config["map"]["cell_size"]))
     pygame.display.set_caption("Map Generator & Path Planning Experiment")
     clock = pygame.time.Clock()
-
-    map_traces = {}
-    agent_traces = []
 
     task = tasks[index]
     game = Game(task)

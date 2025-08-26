@@ -8,11 +8,7 @@ import random
 from tqdm import tqdm
 
 import config
-from agents.a_star_agent import AStarAgent
 from agents.agent_factory import factory
-from agents.d_star_lite_agent import DStarLiteAgent
-from agents.dijkstra_agent import DijkstraAgent
-from agents.monte_carlo_agent import MonteCarloAgent
 from agents.replay_agent import ReplayAgent
 from environment.map import Map
 from game_logic.task_spec import TaskSpec
@@ -66,26 +62,13 @@ def create_positions(map, spawns_per_map):
     start_goal_pairs = find_start_and_goal_positions(spawns_per_map, free_positions)
     return start_goal_pairs
 
-def _get_generation_agent(agent_type, positions, seed):
-    start_pos = positions["start"]
-    goal_pos = positions["goal"]
-    params = {"start": positions["start"], "goal": positions["goal"], "seed":seed}
+def _get_generation_agent(agent_type, positions, seed, agent_traces):
+    params = {"start": positions["start"], "goal": positions["goal"], "seed": seed, "previous_traces": agent_traces}
 
     return factory.create(agent_type, **params)
-    # if agent_type == "astar":
-    #     agent = partial(AStarAgent,start_pos, goal_pos)
-    # elif agent_type == "dstar":
-    #     agent = partial(DStarLiteAgent, start_pos, goal_pos)
-    # elif agent_type == "dijkstra":
-    #     agent = partial(DijkstraAgent, start_pos, goal_pos)
-    # elif agent_type == "monte_carlo":
-    #     agent = partial(MonteCarloAgent, start_pos, goal_pos, seed)
-    # else:
-    #     raise ValueError(f"Unknown agent type: {agent_type}")
-    #
-    # return agent
 
-def _create_generate_tasks(seed):
+
+def _create_generate_tasks(seed, agent_traces):
     maps_to_test = config.CONFIG["maps_to_test"]
     spawns_per_map = config.CONFIG["spawns_per_map"]
     agent_types = config.CONFIG["agent_types"]
@@ -97,7 +80,7 @@ def _create_generate_tasks(seed):
         start_goal_pairs = create_positions(current_map, spawns_per_map)
         for key, position_pairs in start_goal_pairs.items():
             for agent_type in agent_types:
-                agent = _get_generation_agent(agent_type, position_pairs, seed)
+                agent = _get_generation_agent(agent_type, position_pairs, seed, agent_traces)
 
                 task = TaskSpec(seed=map_seed, position_index=key, map_index=map_index, game_map=current_map,
                                 agent=agent)
@@ -131,7 +114,7 @@ def _create_replay_tasks(seed):
 
     return tasks
 
-def create_tasks():
+def create_tasks(agent_traces):
     if config.CONFIG["seed"] is not None:
         seed = config.CONFIG["seed"]
     else:
@@ -139,7 +122,7 @@ def create_tasks():
 
     runtime_type = config.CONFIG["runtime_type"]
     if runtime_type == "Generate":
-        tasks = _create_generate_tasks(seed)
+        tasks = _create_generate_tasks(seed, agent_traces)
     elif runtime_type == "Replay":
         tasks = _create_replay_tasks(seed)
 
