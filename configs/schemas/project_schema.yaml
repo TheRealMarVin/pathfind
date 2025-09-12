@@ -59,6 +59,18 @@ record_trace:
   default: True
   type: bool
 
+agent_export_fields:
+  description: The fields to export when saving traces for agents. If None, we save everything.
+  required: false
+  default: None
+  type: list(str) | None
+
+map_export_fields:
+  description: The fields to export when saving traces for maps. If None, we save everything.
+  required: false
+  default: None
+  type: list(str) | None
+
 game:
   $ref: ./game.yaml
   required: false

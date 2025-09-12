@@ -44,6 +44,7 @@ class Game:
                        "map_index": self.task.map_index, "agent_visited": copy.deepcopy(self.agent.visited),
                        "agent_explored": copy.deepcopy(list(self.agent.explored))}
         agent_state = self.agent.update_and_get_state()
+        result = {k: v for k, v in agent_state.items() if k not in config.CONFIG["agent_export_fields"]}
         agent_trace.update(agent_state)
 
         print("\t\tpath length" ,agent_state["path_length"])

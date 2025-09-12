@@ -3,9 +3,14 @@ seed: 42
 runtime_type: Generate
 display_debug_values: [start_pos, goal_pos]
 
-agent_types: [astar, dstar, dijkstra]
-maps_to_test: 2
-spawns_per_map: 2
+agent_types: [dijkstra, diverse_dijkstra, diverse_dijkstra, diverse_dijkstra, diverse_dijkstra, diverse_dijkstra, diverse_dijkstra]
+maps_to_test: 1
+spawns_per_map: 5
+
+agent_export_fields: [agent_type, spawn_index, map_index, start_pos, goal_pos, agent_visited]
 
 map:
   num_dynamic_areas: 0
+
+game:
+  update_interval: 20
