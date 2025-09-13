@@ -40,17 +40,18 @@ class Game:
         return self.agent.has_reached_goal()
 
     def get_trace(self):
+        # TODO should be in agent
         agent_trace = {"spawn_index": self.task.position_index,
                        "map_index": self.task.map_index, "agent_visited": copy.deepcopy(self.agent.visited),
                        "agent_explored": copy.deepcopy(list(self.agent.explored))}
         agent_state = self.agent.update_and_get_state()
-        result = {k: v for k, v in agent_state.items() if k not in config.CONFIG["agent_export_fields"]}
         agent_trace.update(agent_state)
 
         print("\t\tpath length" ,agent_state["path_length"])
         print("\t\tvisited path nodes count", len(self.agent.visited))
         print("\t\texplored path nodes count", len(self.agent.explored))
-        return agent_trace, self.map_trace
+        filtered_agent_trace = {k: v for k, v in agent_trace.items() if k in config.CONFIG["agent_export_fields"]}
+        return filtered_agent_trace, self.map_trace
 
     def draw(self, surface):
         self.agent.draw(surface)
