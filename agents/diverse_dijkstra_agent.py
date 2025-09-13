@@ -54,9 +54,6 @@ class DiverseDijkstraAgent(Agent):
             if trace["start_pos"] == start and trace["goal_pos"] == goal:
                 self.previous_traces.append(trace["agent_visited"])
 
-        a = 0
-
-
     def update(self, game_map):
         if not self.planned or not self.plan:
             self.plan_path(game_map)
