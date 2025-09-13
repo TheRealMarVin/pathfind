@@ -40,10 +40,7 @@ class Game:
         return self.agent.has_reached_goal()
 
     def get_trace(self):
-        # TODO should be in agent
-        agent_trace = {"spawn_index": self.task.position_index,
-                       "map_index": self.task.map_index, "agent_visited": copy.deepcopy(self.agent.visited),
-                       "agent_explored": copy.deepcopy(list(self.agent.explored))}
+        agent_trace = {"spawn_index": self.task.position_index, "map_index": self.task.map_index}
         agent_state = self.agent.update_and_get_state()
         agent_trace.update(agent_state)
 

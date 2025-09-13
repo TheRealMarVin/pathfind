@@ -1,3 +1,5 @@
+import copy
+
 import config
 import numpy as np
 import pygame
@@ -9,6 +11,7 @@ from helpers.path_helper import compute_path_length
 class Agent:
     def __init__(self, start, goal):
         self.cell_size = config.CONFIG["map"]["cell_size"]
+        # TODO These should be in the state
         self.start = start
         self.goal = goal
         self.position = start
@@ -53,7 +56,11 @@ class Agent:
         raise NotImplementedError()
 
     def update_and_get_state(self):
+        #TODO should just be a getter
         self.state["planning_time"] = np.array(self._planning_times).sum()
         self.state["path_length"] = compute_path_length(self.visited)
+
+        self.state["agent_visited"] = copy.deepcopy(self.agent.visited)
+        self.state["agent_explored"] = copy.deepcopy(list(self.agent.explored))
 
         return self.state
