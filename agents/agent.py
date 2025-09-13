@@ -60,7 +60,7 @@ class Agent:
         self.state["planning_time"] = np.array(self._planning_times).sum()
         self.state["path_length"] = compute_path_length(self.visited)
 
-        self.state["agent_visited"] = copy.deepcopy(self.agent.visited)
-        self.state["agent_explored"] = copy.deepcopy(list(self.agent.explored))
+        self.state["agent_visited"] = copy.deepcopy(self.visited)
+        self.state["agent_explored"] = copy.deepcopy(list(self.explored))
 
         return self.state
