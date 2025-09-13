@@ -3,7 +3,7 @@ seed: 42
 runtime_type: Generate
 display_debug_values: [start_pos, goal_pos]
 
-agent_types: [dijkstra, diverse_dijkstra, diverse_dijkstra, diverse_dijkstra, diverse_dijkstra, diverse_dijkstra, diverse_dijkstra]
+agent_types: [astar, dstar]
 maps_to_test: 1
 spawns_per_map: 5
 
