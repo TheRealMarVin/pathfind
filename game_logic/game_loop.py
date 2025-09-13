@@ -107,7 +107,8 @@ def run_task(task, fps):
     }
 
 def run_experiments_parallel(config, max_workers=4):
-    tasks = create_tasks()
+    agent_traces = []
+    tasks = create_tasks(agent_traces)
     if not tasks:
         print("No tasks to run.")
         return
@@ -127,7 +128,6 @@ def run_experiments_parallel(config, max_workers=4):
 
     # Group traces
     map_traces = {}
-    agent_traces = []
 
     for result in results:
         map_traces[result["map_index"]] = result["map_trace"]

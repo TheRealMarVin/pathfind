@@ -32,7 +32,7 @@ display_debug_values:
 agent_types:
   description: List of agents to run and tests
   required: false
-  default: ["dstar", "astar", "replay", "dijkstra", "diverse_dijkstra", "monte_carlo"]
+  default: ["dstar", "astar", "replay", "dijkstra"]
   type: list(str)
 
 maps_to_test:
