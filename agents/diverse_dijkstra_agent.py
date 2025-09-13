@@ -1,8 +1,5 @@
 import heapq
 import math
-from typing import List, Tuple, Dict, Iterable
-from collections import defaultdict
-
 import numpy as np
 
 from agents.agent import Agent

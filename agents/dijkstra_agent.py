@@ -1,6 +1,6 @@
 import heapq
 import math
-from typing import List, Tuple, Dict, Set
+from typing import List, Tuple, Dict
 
 from agents.agent import Agent
 from agents.agent_factory import factory

@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Callable, Dict, Any
+from typing import Callable, Any
 import inspect
 
 class AgentFactory:

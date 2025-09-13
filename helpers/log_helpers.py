@@ -1,10 +1,9 @@
+import config
 import json
 import os
 import yaml
 
 from datetime import datetime
-
-import config
 
 
 def export_runtime_data(name, output_folder,agent_traces, map_traces, export_config=True):
