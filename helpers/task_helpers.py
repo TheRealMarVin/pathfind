@@ -74,11 +74,12 @@ def _create_generate_tasks(seed, agent_traces):
     agent_types = config.CONFIG["agent_types"]
 
     tasks = []
-    for map_index in tqdm(range(maps_to_test)):
+    for map_index in range(maps_to_test):
+        print(f"processing map index: {map_index}")
         map_seed = seed + map_index
         current_map = create_map(map_seed, config.CONFIG["map"])
         start_goal_pairs = create_positions(current_map, spawns_per_map)
-        for key, position_pairs in start_goal_pairs.items():
+        for key, position_pairs in tqdm(start_goal_pairs.items()):
             for agent_type in agent_types:
                 agent = _get_generation_agent(agent_type, position_pairs, seed, agent_traces)
 
